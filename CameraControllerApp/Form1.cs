@@ -74,6 +74,24 @@ namespace CameraControllerApp
             cbBox5.SelectedIndex = 0;
 
         }
+        // 初始化一些网络信息
+        private void initHttpConfs()
+        {
+            cbBoxTimeMode.Items.Clear();
+            cbBoxTimeMode.Items.Add("秒"); // 默认就是秒即可
+            cbBoxTimeMode.SelectedIndex = 0; // 默认就是选择即可
+
+            cbBoxCameraMode.Items.Clear();
+
+            string[] modes = {
+                "P", "AV", "TV", "AUTO"
+            };
+            foreach(string s in modes)
+            {
+                cbBoxCameraMode.Items.Add(s);
+            }
+            cbBoxCameraMode.SelectedIndex = 0; // 默认也是第一个即可
+        }
         private void btnOn_Click(object sender, EventArgs e)
         {
             Camera.SendStatus("on");
@@ -174,8 +192,15 @@ namespace CameraControllerApp
                         saveDataFS = File.Create(saveDataFile);
                     }*/
 
-                    //打开串口
-                    serialPort.Open();
+                    try
+                    {
+                        //打开串口
+                        serialPort.Open();
+                    }catch(IOException msg)
+                    {
+                        MessageBox.Show("当前的端口不可用", "Error");
+                        return;
+                    }
 
                     //打开串口后设置将不再有效
                     cbBox1.Enabled = false;
@@ -184,7 +209,7 @@ namespace CameraControllerApp
                     cbBox4.Enabled = false;
                     cbBox5.Enabled = false;
 
-
+                    btnFresh.Enabled = false;
                     btnOpen.Text = "关闭串口";
 
                 }
@@ -222,6 +247,7 @@ namespace CameraControllerApp
         // 串口load 的时候开始设置的函数
         private void MainForm_Load(object sender, EventArgs e)
         {
+            initHttpConfs();
             initPortConfs();
             Control.CheckForIllegalCrossThreadCalls = false;
             // 设置接受事件
@@ -230,10 +256,11 @@ namespace CameraControllerApp
 
             serialPort.RtsEnable = true;
             serialPort.DtrEnable = true;
-            serialPort.ReadTimeout = 1000;
+            serialPort.ReadTimeout = 2000;
             // serialPort.WriteTimeout = 1000;
             serialPort.Close();
-            
+            // 缓存这个变量到manager 里面去
+            Camera.serialPort = serialPort;
         }
 
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -241,6 +268,114 @@ namespace CameraControllerApp
             // 端口接受到的数据都会在这里开始比较了
             // 这个里面实际上就是数字即可
 
+        }
+        // 相机初始化
+        private void btnHttpInit_Click(object sender, EventArgs e)
+        {
+            // 需要判断是否为网络请求还是端口请求的初始化
+            if(serialPort.IsOpen) 
+            {
+                // 如果是端口打开了 那么就是端口初始化
+                Camera.CamerType = "serialPort"; // 表示为端口
+            }else
+            {
+                Camera.CamerType = "webHttp";
+            }
+            // 后面其实就是Camera 来发送就可以了 把这个逻辑放在CamerManager 里面即可
+            Camera.SendStatus("init");
+        }
+
+        private void btnOff_Click(object sender, EventArgs e)
+        {
+            Camera.SendStatus("off");
+        }
+
+        private void btnPlayPhoto_Click(object sender, EventArgs e)
+        {
+            Camera.SendStatus("photo");
+        }
+
+        private void btnCameraModeOK_Click(object sender, EventArgs e)
+        {
+            // 相机模式的话 需要获取选择的相机模式即可
+            string mode = cbBoxCameraMode.SelectedItem.ToString();
+            Camera.SendStatus(mode);
+        }
+
+        private void btnIntervalPlayPhoto_Click(object sender, EventArgs e)
+        {
+            // 定时拍照需要先获取时间 然后时间模式
+            var tData = tbTime.Text.ToString();
+            if(tData == "")
+            {
+                MessageBox.Show("请输入数字", "Error");
+                return;
+            }
+            // 开始设置即可
+            try
+            {
+                int time = Convert.ToInt16(tData);
+            }
+            catch(FormatException exception)
+            {
+                MessageBox.Show(exception.Message + "");
+            }
+            // 获取到这个时间后 需要自己组装str;
+            
+            // Camera.SendStatus("off");
+        }
+
+        private void btnStopInterval_Click(object sender, EventArgs e)
+        {
+            // 停止时间拍照
+            Camera.SendStatus("off");
+        }
+
+        private void btnUp_Click(object sender, EventArgs e)
+        {
+            Camera.SendStatus("menuUp");
+        }
+
+        private void btnMenu_Click(object sender, EventArgs e)
+        {
+            Camera.SendStatus("menuOn");
+        }
+
+        private void btnLeft_Click(object sender, EventArgs e)
+        {
+            Camera.SendStatus("menuLeft");
+        }
+
+        private void btnRight_Click(object sender, EventArgs e)
+        {
+            Camera.SendStatus("menuRight");
+        }
+
+        private void btnDown_Click(object sender, EventArgs e)
+        {
+            Camera.SendStatus("menuDown");
+        }
+
+        private void btnMenuOk_Click(object sender, EventArgs e)
+        {
+            Camera.SendStatus("menuOk");
+        }
+
+        private void btnClearLog_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void btnDownStart_Click(object sender, EventArgs e)
+        {
+            // 开始下载
+            Camera.SendStatus("off");
+        }
+
+        private void btnDownEnd_Click(object sender, EventArgs e)
+        {
+            // 下载结束
+            Camera.SendStatus("off");
         }
     }
 }

@@ -112,14 +112,11 @@
             this.btnCameraModeOK.TabIndex = 12;
             this.btnCameraModeOK.Text = "确定";
             this.btnCameraModeOK.UseVisualStyleBackColor = true;
+            this.btnCameraModeOK.Click += new System.EventHandler(this.btnCameraModeOK_Click);
             // 
             // cbBoxCameraMode
             // 
             this.cbBoxCameraMode.FormattingEnabled = true;
-            this.cbBoxCameraMode.Items.AddRange(new object[] {
-            "秒",
-            "分",
-            "时"});
             this.cbBoxCameraMode.Location = new System.Drawing.Point(87, 117);
             this.cbBoxCameraMode.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cbBoxCameraMode.Name = "cbBoxCameraMode";
@@ -138,10 +135,6 @@
             // cbBoxTimeMode
             // 
             this.cbBoxTimeMode.FormattingEnabled = true;
-            this.cbBoxTimeMode.Items.AddRange(new object[] {
-            "秒",
-            "分",
-            "时"});
             this.cbBoxTimeMode.Location = new System.Drawing.Point(142, 86);
             this.cbBoxTimeMode.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.cbBoxTimeMode.Name = "cbBoxTimeMode";
@@ -175,6 +168,7 @@
             this.btnStopInterval.TabIndex = 6;
             this.btnStopInterval.Text = "停止拍照";
             this.btnStopInterval.UseVisualStyleBackColor = true;
+            this.btnStopInterval.Click += new System.EventHandler(this.btnStopInterval_Click);
             // 
             // btnIntervalPlayPhoto
             // 
@@ -186,6 +180,7 @@
             this.btnIntervalPlayPhoto.TabIndex = 5;
             this.btnIntervalPlayPhoto.Text = "定时拍照";
             this.btnIntervalPlayPhoto.UseVisualStyleBackColor = true;
+            this.btnIntervalPlayPhoto.Click += new System.EventHandler(this.btnIntervalPlayPhoto_Click);
             // 
             // btnPlayPhoto
             // 
@@ -197,6 +192,7 @@
             this.btnPlayPhoto.TabIndex = 2;
             this.btnPlayPhoto.Text = "手动拍照";
             this.btnPlayPhoto.UseVisualStyleBackColor = true;
+            this.btnPlayPhoto.Click += new System.EventHandler(this.btnPlayPhoto_Click);
             // 
             // btnOff
             // 
@@ -208,6 +204,7 @@
             this.btnOff.TabIndex = 1;
             this.btnOff.Text = "关机";
             this.btnOff.UseVisualStyleBackColor = true;
+            this.btnOff.Click += new System.EventHandler(this.btnOff_Click);
             // 
             // btnOn
             // 
@@ -281,6 +278,7 @@
             this.btnClearLog.TabIndex = 6;
             this.btnClearLog.Text = "清空日志";
             this.btnClearLog.UseVisualStyleBackColor = true;
+            this.btnClearLog.Click += new System.EventHandler(this.btnClearLog_Click);
             // 
             // btnMenuOk
             // 
@@ -292,6 +290,7 @@
             this.btnMenuOk.TabIndex = 5;
             this.btnMenuOk.Text = "菜单确定";
             this.btnMenuOk.UseVisualStyleBackColor = true;
+            this.btnMenuOk.Click += new System.EventHandler(this.btnMenuOk_Click);
             // 
             // btnDown
             // 
@@ -303,6 +302,7 @@
             this.btnDown.TabIndex = 4;
             this.btnDown.Text = "下";
             this.btnDown.UseVisualStyleBackColor = true;
+            this.btnDown.Click += new System.EventHandler(this.btnDown_Click);
             // 
             // btnRight
             // 
@@ -314,6 +314,7 @@
             this.btnRight.TabIndex = 3;
             this.btnRight.Text = "右";
             this.btnRight.UseVisualStyleBackColor = true;
+            this.btnRight.Click += new System.EventHandler(this.btnRight_Click);
             // 
             // btnLeft
             // 
@@ -325,6 +326,7 @@
             this.btnLeft.TabIndex = 2;
             this.btnLeft.Text = "左";
             this.btnLeft.UseVisualStyleBackColor = true;
+            this.btnLeft.Click += new System.EventHandler(this.btnLeft_Click);
             // 
             // btnMenu
             // 
@@ -336,6 +338,7 @@
             this.btnMenu.TabIndex = 1;
             this.btnMenu.Text = "菜单";
             this.btnMenu.UseVisualStyleBackColor = true;
+            this.btnMenu.Click += new System.EventHandler(this.btnMenu_Click);
             // 
             // btnUp
             // 
@@ -347,6 +350,7 @@
             this.btnUp.TabIndex = 0;
             this.btnUp.Text = "上";
             this.btnUp.UseVisualStyleBackColor = true;
+            this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
             // 
             // groupBox3
             // 
@@ -369,6 +373,7 @@
             this.btnDownStart.TabIndex = 13;
             this.btnDownStart.Text = "下载开始";
             this.btnDownStart.UseVisualStyleBackColor = true;
+            this.btnDownStart.Click += new System.EventHandler(this.btnDownStart_Click);
             // 
             // btnDownEnd
             // 
@@ -380,13 +385,14 @@
             this.btnDownEnd.TabIndex = 14;
             this.btnDownEnd.Text = "下载结束";
             this.btnDownEnd.UseVisualStyleBackColor = true;
+            this.btnDownEnd.Click += new System.EventHandler(this.btnDownEnd_Click);
             // 
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.btnHttpInit);
             this.groupBox4.Location = new System.Drawing.Point(242, 88);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(212, 108);
+            this.groupBox4.Size = new System.Drawing.Size(212, 79);
             this.groupBox4.TabIndex = 15;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "网络连接";
@@ -401,6 +407,7 @@
             this.btnHttpInit.TabIndex = 13;
             this.btnHttpInit.Text = "连接相机";
             this.btnHttpInit.UseVisualStyleBackColor = true;
+            this.btnHttpInit.Click += new System.EventHandler(this.btnHttpInit_Click);
             // 
             // groupBox5
             // 
