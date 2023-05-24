@@ -5,11 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Net;
+using RestSharp;
+using RestSharp.Authenticators;
+
 namespace CameraControllerApp
 {
     // 以下为封装的App Request 请求类
     class HttpRequest
     {
+        private static readonly RestClient client = new RestClient();
         /// <summary>
         /// 向指定URL发送GET方法的请求
         /// </summary>
@@ -107,49 +111,23 @@ namespace CameraControllerApp
         /// <param name="url">发送请求的 URL</param>
         /// <param name="jsonData">请求参数，请求参数应该是Json格式字符串的形式。</param>
         /// <returns>所代表远程资源的响应结果</returns>
-        public static string SendPost(string url, string jsonData)
+        public static string SendPost(string url, Dictionary<string, string> dic)
         {
-            Console.WriteLine("jsonData" + jsonData);
-            string result = String.Empty;
-            try
-            {
-                CookieContainer cookie = new CookieContainer();
-
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                request.Headers.Add("x-requested-with", "XMLHttpRequest");
-                request.ServicePoint.Expect100Continue = false;
-                request.ContentType = "application/x-www-form-urlencoded";
-                request.Accept = "*/*";
-                request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)";
-                request.ContentLength = Encoding.UTF8.GetByteCount(jsonData);
-                request.CookieContainer = cookie;
-                using (StreamWriter writer = new StreamWriter(request.GetRequestStream()))
-                {
-                    
-                    writer.Write(jsonData);
-                }
-
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                response.Cookies = cookie.GetCookies(response.ResponseUri);
-                using (Stream responseStream = response.GetResponseStream())
-                {
-                    using (StreamReader reader = new StreamReader(responseStream))
-                    {
-                        result = reader.ReadToEnd();
-
-                        reader.Close();
-                    }
-                    responseStream.Close();
-                }
-                response.Close();
-                response = null;
-                request = null;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("发送GET请求出现异常：" + ex.Message);
-            }
+            //post请求
+            // client.Authenticator = new HttpBasicAuthenticator(username, password);
+            var request = new RestRequest(url, Method.Post);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddJsonBody(dic);
+             // adds to POST or URL querystring based on Method
+                                                // easily add HTTP Headers
+            // request.AddHeader("header", "value");
+            // add files to upload (works with compatible verbs)
+            // 执行请求
+            
+            var response = client.ExecuteAsync(request);
+            var content = response.Result; // raw content as string
+            var result = content.Content;                             // 或自动反序列化结果
+                                            // return content type is sniffed but can be explicitly set via RestClient.AddHandler();
             return result;
         }
 
@@ -171,7 +149,7 @@ namespace CameraControllerApp
                 request.Method = "POST";
                 request.Headers.Add("x-requested-with", "XMLHttpRequest");
                 request.ServicePoint.Expect100Continue = false;
-                request.ContentType = "application/x-www-form-urlencoded";
+                request.ContentType = "application/application/json";
                 request.Accept = "*/*";
                 request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)";
                 request.ContentLength = Encoding.UTF8.GetByteCount(jsonData);
@@ -200,7 +178,7 @@ namespace CameraControllerApp
             }
             catch (Exception ex)
             {
-                Console.WriteLine("发送GET请求出现异常：" + ex.Message);
+                Console.WriteLine("发送POST请求出现异常：" + ex.Message);
             }
             return result;
         }

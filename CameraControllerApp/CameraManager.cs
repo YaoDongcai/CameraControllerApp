@@ -5,12 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO.Ports;
 using System.Windows.Forms;
+using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace CameraControllerApp
 {
     class CameraManager
     {
-        private string WebHttpUrl = "http://192.168.0.10:7001/respberry/GPIOController";
+        private string WebHttpUrl = "http://127.0.0.1:7003/respberry/";
         public string CamerType
         {
             get;
@@ -61,15 +63,20 @@ namespace CameraControllerApp
             if(this.CamerType == "webHttp") // webHttp 网络请求 or serialPort 端口发送
             {
                 Dictionary<string, string> map = new Dictionary<string, string>();
-
-
-
+                string subUrl = "";
+                Console.WriteLine("init");
                 switch(status)
                 {
                     case "init":
                         // 表示为查询
                         // hex 发送
-                        
+                        // dateYMD //年月日
+                        // 时分秒
+                        var dateYMD = DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day;
+                        var dateHMS = DateTime.Now.Hour + ":" + DateTime.Now.Minute + ":" + DateTime.Now.Second;
+                        map.Add("dateYMD", dateYMD);
+                        map.Add("dateHMS", dateHMS);
+                        subUrl = "initGPIOController";
                         break;
                     case "on":
                         
@@ -115,10 +122,11 @@ namespace CameraControllerApp
                         
                         break;
                 }
-                map.Add("send", status);
-                var jsonString = map.ToString();
+                // var jsonString = JsonConvert.SerializeObject(map, Formatting.Indented);// jss.Deserialize<Dictionary<string, object>>(map);
+                // Console.WriteLine("jsonString" +jsonString);
                 // 表示为网络请求
-                HttpRequest.SendPost(this.WebHttpUrl + "", jsonString);
+                var result = HttpRequest.SendPost(WebHttpUrl + subUrl, map);
+                Console.WriteLine("result"+ result);
             } else
             {
                 // 表示为端口请求 端口类来实现即可
