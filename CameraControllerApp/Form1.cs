@@ -10,7 +10,8 @@ using System.Windows.Forms;
 using System.IO;
 using System.IO.Ports;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;	// 用于构建JSON对象
+using Newtonsoft.Json.Linq; // 用于构建JSON对象
+using System.Threading;
 
 namespace CameraControllerApp
 {
@@ -249,6 +250,11 @@ namespace CameraControllerApp
         // 串口load 的时候开始设置的函数
         private void MainForm_Load(object sender, EventArgs e)
         {
+            // 获取ini 文件
+            var url = INIhelp.GetValue("URL");
+            Camera.ConfigUrl = url;
+            Camera.WebHttpUrl = "http://" + Camera.ConfigUrl + ":7003/respberry/";
+
             initHttpConfs();
             initPortConfs();
             Control.CheckForIllegalCrossThreadCalls = false;
@@ -379,19 +385,21 @@ namespace CameraControllerApp
                 MessageBox.Show("请输入数字", "Error");
                 return;
             }
+            var time = 0;
             // 开始设置即可
             try
             {
-                int time = Convert.ToInt16(tData);
+                 time = Convert.ToInt16(tData);// 设置为毫秒
             }
             catch(FormatException exception)
             {
                 MessageBox.Show(exception.Message + "");
             }
             // 获取到这个时间后 需要自己组装str;
-
-            var result = Camera.SendStatus("off");
-
+            Camera.uatUnit = "01";
+            Camera.time = time;
+            var result = Camera.SendStatus("Interval");
+            
             if (!result.Contains("Error"))
             {
 
@@ -406,7 +414,8 @@ namespace CameraControllerApp
         private void btnStopInterval_Click(object sender, EventArgs e)
         {
             // 停止时间拍照
-            var result =  Camera.SendStatus("off");
+            var result =  Camera.SendStatus("NoPhoto");
+            // 其实是需要设置一下当前的数据即可
             if (!result.Contains("Error"))
             {
 
@@ -510,10 +519,27 @@ namespace CameraControllerApp
         private void btnDownStart_Click(object sender, EventArgs e)
         {
             // 开始下载
-            var result = Camera.SendStatus("off");
+            // 先关机
+            Camera.SendStatus("off");
+            // 关机之后 然后再下载开始
+            var result = Camera.SendStatus("downloadStart");
+            // 需要让开机 关机 定时拍照 拍照的按钮都要禁用
+            btnOn.Enabled = false;
+            btnOff.Enabled = false;
+
+            btnPlayPhoto.Enabled = false;
+            btnIntervalPlayPhoto.Enabled = false;
             if (!result.Contains("Error"))
             {
-
+                Thread thr = new Thread(() =>
+                {
+                    //这里还可以处理些比较耗时的事情。
+                    Thread.Sleep(4000);//休眠时间
+                    var url = "ftp://pi:raspberry@" + Camera.ConfigUrl;
+                    // 然后过个3秒钟 打开ftp
+                    System.Diagnostics.Process.Start(url);
+                });
+                thr.Start();
             }
             else
             {
@@ -521,11 +547,18 @@ namespace CameraControllerApp
                 // 输出日志即可
             }
         }
-
         private void btnDownEnd_Click(object sender, EventArgs e)
         {
+            // 开始开机
+            Camera.SendStatus("on");
             // 下载结束
-            var result = Camera.SendStatus("off");
+            btnOn.Enabled = true;
+            btnOff.Enabled = true;
+
+            btnPlayPhoto.Enabled = true;
+            btnIntervalPlayPhoto.Enabled = true;
+
+            var result = Camera.SendStatus("downloadEnd");
             if (!result.Contains("Error"))
             {
 

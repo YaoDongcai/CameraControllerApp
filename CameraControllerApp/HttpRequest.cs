@@ -124,6 +124,10 @@ namespace CameraControllerApp
                 var response = client.ExecuteAsync(request);
                 var content = response.Result; // raw content as string
                 var result = content.Content;
+                if(result == null)
+                {
+                    return "Error";
+                }
                 return result;// 或自动反序列化结果
             }catch(Exception error)
             {

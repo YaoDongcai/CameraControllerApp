@@ -12,7 +12,9 @@ namespace CameraControllerApp
 {
     class CameraManager
     {
-        private string WebHttpUrl = "http://127.0.0.1:7003/respberry/";
+        
+        public int time;
+        public string uatUnit;
         public string CamerType
         {
             get;
@@ -22,6 +24,10 @@ namespace CameraControllerApp
         {
             get; set;
         }
+
+        public string ConfigUrl = "127.0.0.1";
+
+        public string WebHttpUrl = "http://127.0.0.1:7003/respberry/"; // "http://" +ConfigUrl  + ":7003/respberry/";
         // 初始化网络或者端口是否可用
         public bool InitWebHttp()
         {
@@ -83,32 +89,49 @@ namespace CameraControllerApp
                         map.Add("send", "on");
                         break;
                     case "off":
+                        subUrl = "GPIOController";
                         map.Add("send", "off");
                         break;
                     case "photo":
+                        subUrl = "GPIOController";
                         map.Add("send", "photo");
                         break;
                     case "menuOn":
+                        subUrl = "GPIOController";
                         map.Add("send", "menuOn");
                         break;
                     case "menuOff":
+                        subUrl = "GPIOController";
                         map.Add("send", "menuOff");
                         break;
                     case "menuUp":
+                        subUrl = "GPIOController";
                         map.Add("send", "menuUp");
                         break;
                     case "menuDown":
+                        subUrl = "GPIOController";
                         map.Add("send", "menuDown");
                         break;
 
                     case "menuLeft":
+                        subUrl = "GPIOController";
                         map.Add("send", "menuLeft");
                         break;
                     case "menuRight":
+                        subUrl = "GPIOController";
                         map.Add("send", "menuRight");
                         break;
                     case "menuOk":
+                        subUrl = "GPIOController";
                         map.Add("send", "menuOk");
+                        break;
+                    case "focusSub":
+                        subUrl = "GPIOController";
+                        map.Add("send", "focusSub");
+                        break;
+                    case "focusAdd":
+                        subUrl = "GPIOController";
+                        map.Add("send", "focusAdd");
                         break;
                     case "P":
                         subUrl = "GPIOControllerByModel";
@@ -132,8 +155,21 @@ namespace CameraControllerApp
                         break;
                     case "Interval": // 定时
                         subUrl = "GPIOControllerIntertime";
-                        map.Add("send", "noPhoto");
+                        map.Add("send", "photo");
+                        map.Add("defineTime", this.time + "");
+                        map.Add("unit", "s");
+                        map.Add("timeOut", (this.time * 1000) + "");
                         // map.Add("");
+                        break;
+                    // 下载开始
+                    case "downloadStart":
+                        subUrl = "GPIOController";
+                        map.Add("send", "downloadStart");
+                        break;
+                    // 下载结束
+                    case "downloadEnd":
+                        subUrl = "GPIOController";
+                        map.Add("send", "downloadEnd");
                         break;
                 }
                 var result = HttpRequest.SendPost(WebHttpUrl + subUrl, map);
@@ -197,7 +233,15 @@ namespace CameraControllerApp
                     case "AV":
                         SerialPortSendData("AA75550207008F");
                         break;
-
+                    // AA756602000000
+                    case "NoPhoto":// 取消定时
+                        SerialPortSendData("AA756602000000");
+                        break;
+                    case "Interval": // 定时
+                        var intHex = time.ToString("X");
+                        var str = "AA754402" + intHex + "01" + "20";
+                        SerialPortSendData(str);
+                        break;
                 }
                 return "success";
             }
