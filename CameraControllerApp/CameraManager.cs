@@ -7,7 +7,7 @@ using System.IO.Ports;
 using System.Windows.Forms;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-
+using Newtonsoft.Json.Linq;	// 用于构建JSON对象
 namespace CameraControllerApp
 {
     class CameraManager
@@ -57,7 +57,7 @@ namespace CameraControllerApp
             }
             return "";
         }
-        public void SendStatus(string status)
+        public string SendStatus(string status)
         {
             // 发送这个类型 需要知道是什么字段已经开头即可
             if(this.CamerType == "webHttp") // webHttp 网络请求 or serialPort 端口发送
@@ -79,54 +79,69 @@ namespace CameraControllerApp
                         subUrl = "initGPIOController";
                         break;
                     case "on":
-                        
+                        subUrl = "GPIOController";
+                        map.Add("send", "on");
                         break;
                     case "off":
-                        
+                        map.Add("send", "off");
                         break;
                     case "photo":
-                        
+                        map.Add("send", "photo");
                         break;
                     case "menuOn":
-                        
+                        map.Add("send", "menuOn");
                         break;
                     case "menuOff":
-                        
+                        map.Add("send", "menuOff");
                         break;
                     case "menuUp":
-                        
+                        map.Add("send", "menuUp");
                         break;
                     case "menuDown":
-                        
+                        map.Add("send", "menuDown");
                         break;
 
                     case "menuLeft":
-                        
+                        map.Add("send", "menuLeft");
                         break;
                     case "menuRight":
-                        
+                        map.Add("send", "menuRight");
                         break;
                     case "menuOk":
-                        
+                        map.Add("send", "menuOk");
                         break;
                     case "P":
-                        
+                        subUrl = "GPIOControllerByModel";
+                        map.Add("send", "P");
                         break;
                     case "AUTO":
-                        
+                        subUrl = "GPIOControllerByModel";
+                        map.Add("send", "AUTO");
                         break;
                     case "TV":
-                        
+                        subUrl = "GPIOControllerByModel";
+                        map.Add("send", "TV");
                         break;
                     case "AV":
-                        
+                        subUrl = "GPIOControllerByModel";
+                        map.Add("send", "AV");
+                        break;
+                    case "NoPhoto":// 取消定时
+                        subUrl = "GPIOControllerIntertime";
+                        map.Add("send", "noPhoto");
+                        break;
+                    case "Interval": // 定时
+                        subUrl = "GPIOControllerIntertime";
+                        map.Add("send", "noPhoto");
+                        // map.Add("");
                         break;
                 }
+                var result = HttpRequest.SendPost(WebHttpUrl + subUrl, map);
+                return result;
                 // var jsonString = JsonConvert.SerializeObject(map, Formatting.Indented);// jss.Deserialize<Dictionary<string, object>>(map);
                 // Console.WriteLine("jsonString" +jsonString);
                 // 表示为网络请求
-                var result = HttpRequest.SendPost(WebHttpUrl + subUrl, map);
-                Console.WriteLine("result"+ result);
+
             } else
             {
                 // 表示为端口请求 端口类来实现即可
@@ -184,6 +199,7 @@ namespace CameraControllerApp
                         break;
 
                 }
+                return "success";
             }
             // 每次发送请求完成后需要写入当前是否为成功的日志放在一个数据数组list 里面
 

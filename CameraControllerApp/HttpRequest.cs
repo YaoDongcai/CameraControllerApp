@@ -20,43 +20,38 @@ namespace CameraControllerApp
         /// <param name="url">发送请求的URL</param>
         /// <param name="param">请求参数，请求参数应该是 name1=value1&name2=value2 的形式。</param>
         /// <returns>所代表远程资源的响应结果</returns>
-        public static string SendGet(string url, string param)
+        public static string SendGet(string url)
         {
-            string result = String.Empty;
-            StreamReader reader = null;
             try
+
             {
-                string urlNameString = url + "?" + param;
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(urlNameString);
-                request.Method = "GET";
-                request.ContentType = "text/html;charset=UTF-8";
-                request.Accept = "*/*";
-                request.UserAgent = "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)";
 
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                Stream responseStream = response.GetResponseStream();
-                reader = new StreamReader(responseStream, Encoding.GetEncoding("utf-8"));
-                result = reader.ReadToEnd();
+                var client = new RestClient(url);
 
-                reader.Close();
-                responseStream.Close();
-                response.Close();
-                reader = null;
-                responseStream = null;
-                response = null;
+                var request = new RestRequest();
+
+                request.Method = Method.Get;
+
+                request.Timeout = 5000;
+
+                request.AddHeader("content-type", "text/html; charset=utf-8");
+
+                request.AddHeader("content-encoding", "gzip");
+
+                var response = client.ExecuteAsync(request);
+
+                var content = response.Result; // raw content as string
+                var result = content.Content;                             // 或自动反序列化结果
+                return result;
             }
+
             catch (Exception ex)
+
             {
-                Console.WriteLine("发送GET请求出现异常：" + ex.Message);
+
+                return ex.ToString();
+
             }
-            finally
-            {
-                if (reader != null)
-                {
-                    reader.Close();
-                }
-            }
-            return result;
         }
 
         /// <summary>
@@ -115,20 +110,27 @@ namespace CameraControllerApp
         {
             //post请求
             // client.Authenticator = new HttpBasicAuthenticator(username, password);
-            var request = new RestRequest(url, Method.Post);
-            request.AddHeader("Content-Type", "application/json");
-            request.AddJsonBody(dic);
-             // adds to POST or URL querystring based on Method
-                                                // easily add HTTP Headers
-            // request.AddHeader("header", "value");
-            // add files to upload (works with compatible verbs)
-            // 执行请求
+            try
+            {
+                var request = new RestRequest(url, Method.Post);
+                request.AddHeader("Content-Type", "application/json");
+                request.AddJsonBody(dic);
+                // adds to POST or URL querystring based on Method
+                // easily add HTTP Headers
+                // request.AddHeader("header", "value");
+                // add files to upload (works with compatible verbs)
+                // 执行请求
+
+                var response = client.ExecuteAsync(request);
+                var content = response.Result; // raw content as string
+                var result = content.Content;
+                return result;// 或自动反序列化结果
+            }catch(Exception error)
+            {
+                return "Error:" + error.Message;
+            }
+            // return content type is sniffed but can be explicitly set via RestClient.AddHandler();
             
-            var response = client.ExecuteAsync(request);
-            var content = response.Result; // raw content as string
-            var result = content.Content;                             // 或自动反序列化结果
-                                            // return content type is sniffed but can be explicitly set via RestClient.AddHandler();
-            return result;
         }
 
         /// <summary>

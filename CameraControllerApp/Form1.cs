@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.IO.Ports;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;	// 用于构建JSON对象
 
 namespace CameraControllerApp
 {
@@ -211,7 +213,7 @@ namespace CameraControllerApp
 
                     btnFresh.Enabled = false;
                     btnOpen.Text = "关闭串口";
-
+                    Camera.CamerType = "serialPort";
                 }
                 catch (System.Exception ex)
                 {
@@ -221,7 +223,7 @@ namespace CameraControllerApp
             }
             else //串口处于打开状态
             {
-
+                Camera.CamerType = "webHttp";
                 serialPort.Close();//关闭串口
                 //串口关闭时设置有效
                 cbBox1.Enabled = true;
@@ -261,6 +263,9 @@ namespace CameraControllerApp
             serialPort.Close();
             // 缓存这个变量到manager 里面去
             Camera.serialPort = serialPort;
+            // 设置模式为webHttp
+            Camera.CamerType = "webHttp";
+                 
         }
 
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -282,24 +287,87 @@ namespace CameraControllerApp
                 Camera.CamerType = "webHttp";
             }
             // 后面其实就是Camera 来发送就可以了 把这个逻辑放在CamerManager 里面即可
-            Camera.SendStatus("init");
+           var result =  Camera.SendStatus("init");
+            if (!result.Contains("Error"))
+            {
+                var ResJson
+                    = JsonConvert.DeserializeObject<ResponseResult>(result);
+                // 获取对应的数据设置即可
+                var workType = ResJson.data.workType;
+                var isSetTime = ResJson.data.isSetTime;
+                var unit = ResJson.data.unit; // 只会是秒
+                var defineTime = ResJson.data.defineTime;
+                // 开始设置界面上的数据类型为这个即可
+                tbTime.Text = "" + defineTime;
+                switch(workType)
+                {
+                    case "P":
+                        cbBoxCameraMode.SelectedIndex = 0;
+                        break;
+                    case "AV":
+                        cbBoxCameraMode.SelectedIndex = 1;
+                        break;
+                    case "TV":
+                        cbBoxCameraMode.SelectedIndex = 2;
+                        break;
+                    case "AUTO":
+                        cbBoxCameraMode.SelectedIndex = 3;
+                        break;
+                    default:
+                        break;
+                }
+                // 是否为定时 如果是定时 那么就不能再设置定时了
+                // isSetTime 
+            }
+            else
+            {
+                // 包含了Error 那么就是不正常的了
+                // 输出日志即可
+            }
         }
 
         private void btnOff_Click(object sender, EventArgs e)
         {
-            Camera.SendStatus("off");
+            var result = Camera.SendStatus("off");
+            if (!result.Contains("Error"))
+            {
+                
+            }
+            else
+            {
+                // 包含了Error 那么就是不正常的了
+                // 输出日志即可
+            }
         }
 
         private void btnPlayPhoto_Click(object sender, EventArgs e)
         {
-            Camera.SendStatus("photo");
+            var result = Camera.SendStatus("photo");
+            if (!result.Contains("Error"))
+            {
+
+            }
+            else
+            {
+                // 包含了Error 那么就是不正常的了
+                // 输出日志即可
+            }
         }
 
         private void btnCameraModeOK_Click(object sender, EventArgs e)
         {
             // 相机模式的话 需要获取选择的相机模式即可
             string mode = cbBoxCameraMode.SelectedItem.ToString();
-            Camera.SendStatus(mode);
+            var result = Camera.SendStatus(mode);
+            if (!result.Contains("Error"))
+            {
+
+            }
+            else
+            {
+                // 包含了Error 那么就是不正常的了
+                // 输出日志即可
+            }
         }
 
         private void btnIntervalPlayPhoto_Click(object sender, EventArgs e)
@@ -321,44 +389,117 @@ namespace CameraControllerApp
                 MessageBox.Show(exception.Message + "");
             }
             // 获取到这个时间后 需要自己组装str;
-            
-            // Camera.SendStatus("off");
+
+            var result = Camera.SendStatus("off");
+
+            if (!result.Contains("Error"))
+            {
+
+            }
+            else
+            {
+                // 包含了Error 那么就是不正常的了
+                // 输出日志即可
+            }
         }
 
         private void btnStopInterval_Click(object sender, EventArgs e)
         {
             // 停止时间拍照
-            Camera.SendStatus("off");
+            var result =  Camera.SendStatus("off");
+            if (!result.Contains("Error"))
+            {
+
+            }
+            else
+            {
+                // 包含了Error 那么就是不正常的了
+                // 输出日志即可
+            }
         }
 
         private void btnUp_Click(object sender, EventArgs e)
         {
-            Camera.SendStatus("menuUp");
+            var result = Camera.SendStatus("menuUp");
+            if (!result.Contains("Error"))
+            {
+
+            }
+            else
+            {
+                // 包含了Error 那么就是不正常的了
+                // 输出日志即可
+            }
         }
 
         private void btnMenu_Click(object sender, EventArgs e)
         {
-            Camera.SendStatus("menuOn");
+            var result = Camera.SendStatus("menuOn");
+            if (!result.Contains("Error"))
+            {
+
+            }
+            else
+            {
+                // 包含了Error 那么就是不正常的了
+                // 输出日志即可
+            }
         }
 
         private void btnLeft_Click(object sender, EventArgs e)
         {
-            Camera.SendStatus("menuLeft");
+            var result = Camera.SendStatus("menuLeft");
+            if (!result.Contains("Error"))
+            {
+
+            }
+            else
+            {
+                // 包含了Error 那么就是不正常的了
+                // 输出日志即可
+            }
         }
 
         private void btnRight_Click(object sender, EventArgs e)
         {
-            Camera.SendStatus("menuRight");
+            var result = Camera.SendStatus("menuRight");
+            if (!result.Contains("Error"))
+            {
+
+            }
+            else
+            {
+                // 包含了Error 那么就是不正常的了
+                // 输出日志即可
+            }
         }
 
         private void btnDown_Click(object sender, EventArgs e)
         {
-            Camera.SendStatus("menuDown");
+            var result = Camera.SendStatus("menuDown");
+            if (!result.Contains("Error"))
+            {
+
+            }
+            else
+            {
+                // 包含了Error 那么就是不正常的了
+                // 输出日志即可
+            }
         }
 
         private void btnMenuOk_Click(object sender, EventArgs e)
         {
-            Camera.SendStatus("menuOk");
+            var result = Camera.SendStatus("menuOk");
+            if (!result.Contains("Error"))
+            {
+
+            }
+            else
+            {
+                // 包含了Error 那么就是不正常的了
+                // 输出日志即可
+            }
         }
 
         private void btnClearLog_Click(object sender, EventArgs e)
@@ -369,13 +510,31 @@ namespace CameraControllerApp
         private void btnDownStart_Click(object sender, EventArgs e)
         {
             // 开始下载
-            Camera.SendStatus("off");
+            var result = Camera.SendStatus("off");
+            if (!result.Contains("Error"))
+            {
+
+            }
+            else
+            {
+                // 包含了Error 那么就是不正常的了
+                // 输出日志即可
+            }
         }
 
         private void btnDownEnd_Click(object sender, EventArgs e)
         {
             // 下载结束
-            Camera.SendStatus("off");
+            var result = Camera.SendStatus("off");
+            if (!result.Contains("Error"))
+            {
+
+            }
+            else
+            {
+                // 包含了Error 那么就是不正常的了
+                // 输出日志即可
+            }
         }
     }
 }
