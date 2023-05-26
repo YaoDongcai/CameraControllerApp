@@ -43,7 +43,20 @@ namespace CameraControllerApp
             }
             // 获取我们输入的数据
             // String strSend = "AA75CE020000C3";
-
+            // 应该是利用bytes 来发送数据
+             
+            Console.WriteLine(strSend);
+            byte[] decBytes = new byte[strSend.Length/2];
+            for (int i=0; i<strSend.Length; i+=2)
+            {
+                var s = strSend.Substring(i, 2);
+                decBytes[i/2] = Convert.ToByte(s, 16);
+            }
+            
+            Console.WriteLine("decBytes", decBytes);
+            // 发送16进制的数据即可
+            serialPort.Write(decBytes, 0, decBytes.Length);
+            /**
             char[] values = strSend.ToCharArray();
             foreach (char letter in values)
             {
@@ -60,7 +73,7 @@ namespace CameraControllerApp
                     MessageBox.Show(ex.Message + "", "Error");
                 }
 
-            }
+            }**/
             return "";
         }
         public string SendStatus(string status)

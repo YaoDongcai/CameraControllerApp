@@ -108,6 +108,7 @@ namespace CameraControllerApp
         /// <returns>所代表远程资源的响应结果</returns>
         public static string SendPost(string url, Dictionary<string, string> dic)
         {
+            Console.WriteLine("url" + url);
             //post请求
             // client.Authenticator = new HttpBasicAuthenticator(username, password);
             try
@@ -124,6 +125,7 @@ namespace CameraControllerApp
                 var response = client.ExecuteAsync(request);
                 var content = response.Result; // raw content as string
                 var result = content.Content;
+                Console.WriteLine("result" + result);
                 if(result == null)
                 {
                     return "Error";

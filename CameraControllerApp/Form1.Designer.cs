@@ -41,6 +41,24 @@
             this.btnOff = new System.Windows.Forms.Button();
             this.btnOn = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.btnOpen = new System.Windows.Forms.Button();
+            this.btnFresh = new System.Windows.Forms.Button();
+            this.cbBox5 = new System.Windows.Forms.ComboBox();
+            this.cbBox4 = new System.Windows.Forms.ComboBox();
+            this.cbBox3 = new System.Windows.Forms.ComboBox();
+            this.cbBox2 = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.cbBox1 = new System.Windows.Forms.ComboBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.btnHttpInit = new System.Windows.Forms.Button();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.btnDownEnd = new System.Windows.Forms.Button();
+            this.btnDownStart = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnClearLog = new System.Windows.Forms.Button();
@@ -50,33 +68,16 @@
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnMenu = new System.Windows.Forms.Button();
             this.btnUp = new System.Windows.Forms.Button();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.btnDownStart = new System.Windows.Forms.Button();
-            this.btnDownEnd = new System.Windows.Forms.Button();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.btnHttpInit = new System.Windows.Forms.Button();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.cbBox1 = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.cbBox2 = new System.Windows.Forms.ComboBox();
-            this.cbBox3 = new System.Windows.Forms.ComboBox();
-            this.cbBox4 = new System.Windows.Forms.ComboBox();
-            this.cbBox5 = new System.Windows.Forms.ComboBox();
-            this.btnFresh = new System.Windows.Forms.Button();
-            this.btnOpen = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
+            this.LogListView = new System.Windows.Forms.ListView();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            this.groupBox4.SuspendLayout();
             this.groupBox5.SuspendLayout();
+            this.groupBox4.SuspendLayout();
+            this.groupBox3.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -239,9 +240,195 @@
             this.splitContainer1.SplitterDistance = 220;
             this.splitContainer1.TabIndex = 1;
             // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.label8);
+            this.groupBox5.Controls.Add(this.label7);
+            this.groupBox5.Controls.Add(this.label6);
+            this.groupBox5.Controls.Add(this.label5);
+            this.groupBox5.Controls.Add(this.btnOpen);
+            this.groupBox5.Controls.Add(this.btnFresh);
+            this.groupBox5.Controls.Add(this.cbBox5);
+            this.groupBox5.Controls.Add(this.cbBox4);
+            this.groupBox5.Controls.Add(this.cbBox3);
+            this.groupBox5.Controls.Add(this.cbBox2);
+            this.groupBox5.Controls.Add(this.label4);
+            this.groupBox5.Controls.Add(this.cbBox1);
+            this.groupBox5.Location = new System.Drawing.Point(460, 5);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(213, 354);
+            this.groupBox5.TabIndex = 16;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "串口控制";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(15, 151);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(52, 15);
+            this.label8.TabIndex = 11;
+            this.label8.Text = "停止位";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(15, 118);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(52, 15);
+            this.label7.TabIndex = 10;
+            this.label7.Text = "校验位";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(15, 85);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(52, 15);
+            this.label6.TabIndex = 9;
+            this.label6.Text = "数据位";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(15, 54);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(52, 15);
+            this.label5.TabIndex = 8;
+            this.label5.Text = "波特率";
+            // 
+            // btnOpen
+            // 
+            this.btnOpen.AutoSize = true;
+            this.btnOpen.Location = new System.Drawing.Point(110, 274);
+            this.btnOpen.Name = "btnOpen";
+            this.btnOpen.Size = new System.Drawing.Size(77, 25);
+            this.btnOpen.TabIndex = 7;
+            this.btnOpen.Text = "打开端口";
+            this.btnOpen.UseVisualStyleBackColor = true;
+            this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
+            // 
+            // btnFresh
+            // 
+            this.btnFresh.AutoSize = true;
+            this.btnFresh.Location = new System.Drawing.Point(15, 274);
+            this.btnFresh.Name = "btnFresh";
+            this.btnFresh.Size = new System.Drawing.Size(77, 25);
+            this.btnFresh.TabIndex = 6;
+            this.btnFresh.Text = "刷新端口";
+            this.btnFresh.UseVisualStyleBackColor = true;
+            this.btnFresh.Click += new System.EventHandler(this.btnFresh_Click);
+            // 
+            // cbBox5
+            // 
+            this.cbBox5.FormattingEnabled = true;
+            this.cbBox5.Location = new System.Drawing.Point(73, 144);
+            this.cbBox5.Name = "cbBox5";
+            this.cbBox5.Size = new System.Drawing.Size(121, 23);
+            this.cbBox5.TabIndex = 5;
+            // 
+            // cbBox4
+            // 
+            this.cbBox4.FormattingEnabled = true;
+            this.cbBox4.Location = new System.Drawing.Point(73, 113);
+            this.cbBox4.Name = "cbBox4";
+            this.cbBox4.Size = new System.Drawing.Size(121, 23);
+            this.cbBox4.TabIndex = 4;
+            // 
+            // cbBox3
+            // 
+            this.cbBox3.FormattingEnabled = true;
+            this.cbBox3.Location = new System.Drawing.Point(73, 82);
+            this.cbBox3.Name = "cbBox3";
+            this.cbBox3.Size = new System.Drawing.Size(121, 23);
+            this.cbBox3.TabIndex = 3;
+            // 
+            // cbBox2
+            // 
+            this.cbBox2.FormattingEnabled = true;
+            this.cbBox2.Location = new System.Drawing.Point(73, 51);
+            this.cbBox2.Name = "cbBox2";
+            this.cbBox2.Size = new System.Drawing.Size(121, 23);
+            this.cbBox2.TabIndex = 2;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(30, 23);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(37, 15);
+            this.label4.TabIndex = 1;
+            this.label4.Text = "串口";
+            // 
+            // cbBox1
+            // 
+            this.cbBox1.FormattingEnabled = true;
+            this.cbBox1.Location = new System.Drawing.Point(73, 20);
+            this.cbBox1.Name = "cbBox1";
+            this.cbBox1.Size = new System.Drawing.Size(121, 23);
+            this.cbBox1.TabIndex = 0;
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.btnHttpInit);
+            this.groupBox4.Location = new System.Drawing.Point(242, 88);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(212, 79);
+            this.groupBox4.TabIndex = 15;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "网络连接";
+            // 
+            // btnHttpInit
+            // 
+            this.btnHttpInit.AutoSize = true;
+            this.btnHttpInit.Location = new System.Drawing.Point(6, 23);
+            this.btnHttpInit.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnHttpInit.Name = "btnHttpInit";
+            this.btnHttpInit.Size = new System.Drawing.Size(193, 25);
+            this.btnHttpInit.TabIndex = 13;
+            this.btnHttpInit.Text = "连接相机";
+            this.btnHttpInit.UseVisualStyleBackColor = true;
+            this.btnHttpInit.Click += new System.EventHandler(this.btnHttpInit_Click);
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.btnDownEnd);
+            this.groupBox3.Controls.Add(this.btnDownStart);
+            this.groupBox3.Location = new System.Drawing.Point(242, 5);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(212, 69);
+            this.groupBox3.TabIndex = 3;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "数据控制";
+            // 
+            // btnDownEnd
+            // 
+            this.btnDownEnd.AutoSize = true;
+            this.btnDownEnd.Location = new System.Drawing.Point(122, 23);
+            this.btnDownEnd.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnDownEnd.Name = "btnDownEnd";
+            this.btnDownEnd.Size = new System.Drawing.Size(77, 25);
+            this.btnDownEnd.TabIndex = 14;
+            this.btnDownEnd.Text = "下载结束";
+            this.btnDownEnd.UseVisualStyleBackColor = true;
+            this.btnDownEnd.Click += new System.EventHandler(this.btnDownEnd_Click);
+            // 
+            // btnDownStart
+            // 
+            this.btnDownStart.AutoSize = true;
+            this.btnDownStart.Location = new System.Drawing.Point(6, 23);
+            this.btnDownStart.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnDownStart.Name = "btnDownStart";
+            this.btnDownStart.Size = new System.Drawing.Size(77, 25);
+            this.btnDownStart.TabIndex = 13;
+            this.btnDownStart.Text = "下载开始";
+            this.btnDownStart.UseVisualStyleBackColor = true;
+            this.btnDownStart.Click += new System.EventHandler(this.btnDownStart_Click);
+            // 
             // groupBox2
             // 
             this.groupBox2.AutoSize = true;
+            this.groupBox2.Controls.Add(this.LogListView);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.btnClearLog);
             this.groupBox2.Controls.Add(this.btnMenuOk);
@@ -254,7 +441,7 @@
             this.groupBox2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.groupBox2.Size = new System.Drawing.Size(233, 357);
+            this.groupBox2.Size = new System.Drawing.Size(444, 357);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "相机设置";
@@ -352,190 +539,15 @@
             this.btnUp.UseVisualStyleBackColor = true;
             this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
             // 
-            // groupBox3
+            // LogListView
             // 
-            this.groupBox3.Controls.Add(this.btnDownEnd);
-            this.groupBox3.Controls.Add(this.btnDownStart);
-            this.groupBox3.Location = new System.Drawing.Point(242, 5);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(212, 69);
-            this.groupBox3.TabIndex = 3;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "数据控制";
-            // 
-            // btnDownStart
-            // 
-            this.btnDownStart.AutoSize = true;
-            this.btnDownStart.Location = new System.Drawing.Point(6, 23);
-            this.btnDownStart.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnDownStart.Name = "btnDownStart";
-            this.btnDownStart.Size = new System.Drawing.Size(77, 25);
-            this.btnDownStart.TabIndex = 13;
-            this.btnDownStart.Text = "下载开始";
-            this.btnDownStart.UseVisualStyleBackColor = true;
-            this.btnDownStart.Click += new System.EventHandler(this.btnDownStart_Click);
-            // 
-            // btnDownEnd
-            // 
-            this.btnDownEnd.AutoSize = true;
-            this.btnDownEnd.Location = new System.Drawing.Point(122, 23);
-            this.btnDownEnd.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnDownEnd.Name = "btnDownEnd";
-            this.btnDownEnd.Size = new System.Drawing.Size(77, 25);
-            this.btnDownEnd.TabIndex = 14;
-            this.btnDownEnd.Text = "下载结束";
-            this.btnDownEnd.UseVisualStyleBackColor = true;
-            this.btnDownEnd.Click += new System.EventHandler(this.btnDownEnd_Click);
-            // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.btnHttpInit);
-            this.groupBox4.Location = new System.Drawing.Point(242, 88);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(212, 79);
-            this.groupBox4.TabIndex = 15;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "网络连接";
-            // 
-            // btnHttpInit
-            // 
-            this.btnHttpInit.AutoSize = true;
-            this.btnHttpInit.Location = new System.Drawing.Point(6, 23);
-            this.btnHttpInit.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnHttpInit.Name = "btnHttpInit";
-            this.btnHttpInit.Size = new System.Drawing.Size(193, 25);
-            this.btnHttpInit.TabIndex = 13;
-            this.btnHttpInit.Text = "连接相机";
-            this.btnHttpInit.UseVisualStyleBackColor = true;
-            this.btnHttpInit.Click += new System.EventHandler(this.btnHttpInit_Click);
-            // 
-            // groupBox5
-            // 
-            this.groupBox5.Controls.Add(this.label8);
-            this.groupBox5.Controls.Add(this.label7);
-            this.groupBox5.Controls.Add(this.label6);
-            this.groupBox5.Controls.Add(this.label5);
-            this.groupBox5.Controls.Add(this.btnOpen);
-            this.groupBox5.Controls.Add(this.btnFresh);
-            this.groupBox5.Controls.Add(this.cbBox5);
-            this.groupBox5.Controls.Add(this.cbBox4);
-            this.groupBox5.Controls.Add(this.cbBox3);
-            this.groupBox5.Controls.Add(this.cbBox2);
-            this.groupBox5.Controls.Add(this.label4);
-            this.groupBox5.Controls.Add(this.cbBox1);
-            this.groupBox5.Location = new System.Drawing.Point(460, 5);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(213, 354);
-            this.groupBox5.TabIndex = 16;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "串口控制";
-            // 
-            // cbBox1
-            // 
-            this.cbBox1.FormattingEnabled = true;
-            this.cbBox1.Location = new System.Drawing.Point(73, 20);
-            this.cbBox1.Name = "cbBox1";
-            this.cbBox1.Size = new System.Drawing.Size(121, 23);
-            this.cbBox1.TabIndex = 0;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(30, 23);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(37, 15);
-            this.label4.TabIndex = 1;
-            this.label4.Text = "串口";
-            // 
-            // cbBox2
-            // 
-            this.cbBox2.FormattingEnabled = true;
-            this.cbBox2.Location = new System.Drawing.Point(73, 51);
-            this.cbBox2.Name = "cbBox2";
-            this.cbBox2.Size = new System.Drawing.Size(121, 23);
-            this.cbBox2.TabIndex = 2;
-            // 
-            // cbBox3
-            // 
-            this.cbBox3.FormattingEnabled = true;
-            this.cbBox3.Location = new System.Drawing.Point(73, 82);
-            this.cbBox3.Name = "cbBox3";
-            this.cbBox3.Size = new System.Drawing.Size(121, 23);
-            this.cbBox3.TabIndex = 3;
-            // 
-            // cbBox4
-            // 
-            this.cbBox4.FormattingEnabled = true;
-            this.cbBox4.Location = new System.Drawing.Point(73, 113);
-            this.cbBox4.Name = "cbBox4";
-            this.cbBox4.Size = new System.Drawing.Size(121, 23);
-            this.cbBox4.TabIndex = 4;
-            // 
-            // cbBox5
-            // 
-            this.cbBox5.FormattingEnabled = true;
-            this.cbBox5.Location = new System.Drawing.Point(73, 144);
-            this.cbBox5.Name = "cbBox5";
-            this.cbBox5.Size = new System.Drawing.Size(121, 23);
-            this.cbBox5.TabIndex = 5;
-            // 
-            // btnFresh
-            // 
-            this.btnFresh.AutoSize = true;
-            this.btnFresh.Location = new System.Drawing.Point(15, 274);
-            this.btnFresh.Name = "btnFresh";
-            this.btnFresh.Size = new System.Drawing.Size(77, 25);
-            this.btnFresh.TabIndex = 6;
-            this.btnFresh.Text = "刷新端口";
-            this.btnFresh.UseVisualStyleBackColor = true;
-            this.btnFresh.Click += new System.EventHandler(this.btnFresh_Click);
-            // 
-            // btnOpen
-            // 
-            this.btnOpen.AutoSize = true;
-            this.btnOpen.Location = new System.Drawing.Point(110, 274);
-            this.btnOpen.Name = "btnOpen";
-            this.btnOpen.Size = new System.Drawing.Size(77, 25);
-            this.btnOpen.TabIndex = 7;
-            this.btnOpen.Text = "打开端口";
-            this.btnOpen.UseVisualStyleBackColor = true;
-            this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(15, 54);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(52, 15);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "波特率";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(15, 85);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(52, 15);
-            this.label6.TabIndex = 9;
-            this.label6.Text = "数据位";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(15, 118);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(52, 15);
-            this.label7.TabIndex = 10;
-            this.label7.Text = "校验位";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(15, 151);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(52, 15);
-            this.label8.TabIndex = 11;
-            this.label8.Text = "停止位";
+            this.LogListView.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
+            this.LogListView.HideSelection = false;
+            this.LogListView.Location = new System.Drawing.Point(6, 167);
+            this.LogListView.Name = "LogListView";
+            this.LogListView.Size = new System.Drawing.Size(432, 164);
+            this.LogListView.TabIndex = 8;
+            this.LogListView.UseCompatibleStateImageBehavior = false;
             // 
             // MainForm
             // 
@@ -546,6 +558,7 @@
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "MainForm";
             this.Text = "Form1";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_Closed);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -555,14 +568,14 @@
             this.splitContainer1.Panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            this.groupBox4.ResumeLayout(false);
-            this.groupBox4.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -609,6 +622,7 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.ListView LogListView;
     }
 }
 
