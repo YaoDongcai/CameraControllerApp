@@ -39,8 +39,12 @@ namespace CameraControllerApp
             {
                 this.cbBox1.Items.Add(s);
             }
-            // 设置默认串口位第一个
-            cbBox1.SelectedIndex = 0;
+            if(cbBox1.Items.Count >= 1)
+            {
+                // 设置默认串口位第一个
+                cbBox1.SelectedIndex = 0;
+            }
+            
 
             string[] baudRate =
             {
@@ -150,7 +154,12 @@ namespace CameraControllerApp
                 cbBox1.Items.Add(item);
             }
             // 只是更新当前的串口默认值即可;
-            cbBox1.SelectedIndex = 0;
+            if (cbBox1.Items.Count >= 1)
+            {
+                // 设置默认串口位第一个
+                cbBox1.SelectedIndex = 0;
+            }
+            //cbBox1.SelectedIndex = 0;
             
         }
         // 打开或者关闭端口
@@ -352,12 +361,52 @@ namespace CameraControllerApp
                                 // 开始初始化里面的数据即可
                                 // 获取时间
                                 var isSetTimeStr = GlobalStr.Substring(8, 2);
+                                string LogStr = "";
+                                // 是否为定时
+                               if(isSetTimeStr == "01")
+                                {
+                                    // 非定时
+                                    LogStr += "手动拍照";
+                                }else
+                                {
+                                    // 表示为定时
+                                    LogStr += "定时拍照";
+                                }
                                 var unitStr = GlobalStr.Substring(10, 2);
                                 var defineTimeHexStr = GlobalStr.Substring(12, 2);
                                 var workType = GlobalStr.Substring(14, 2);
 
                                 // 开始设置数据即可
-
+                                // 需要将hexStr 的数据变成10进制的即可
+                                var defineTime = Int32.Parse(defineTimeHexStr, System.Globalization.NumberStyles.HexNumber);
+                                // 还需要设置单位即可  
+                                
+                                tbTime.Text = "" + defineTime;
+                                LogStr += "时间为:" + defineTime;
+                                // 还需要设置工作模式即可
+                                switch (workType)
+                                {
+                                    case "0A":
+                                        // P 模式
+                                        LogStr += ",模式为:" + "P模式";
+                                        cbBoxCameraMode.SelectedIndex = 0;
+                                        break;
+                                    case "01":
+                                        LogStr += ",模式为:" + "AUTO模式";
+                                        cbBoxCameraMode.SelectedIndex = 3;
+                                        //str += "AUTO";
+                                        break;
+                                    case "07":// TV
+                                        LogStr += ",模式为:" + "TV模式";
+                                        cbBoxCameraMode.SelectedIndex = 2;
+                                        //str += "07";
+                                        break;
+                                    case "02":
+                                        LogStr += ",模式为:" + "AV模式";
+                                        cbBoxCameraMode.SelectedIndex = 1;
+                                        //str += "02"; AV
+                                        break;
+                                }
 
                                 break;
                         }

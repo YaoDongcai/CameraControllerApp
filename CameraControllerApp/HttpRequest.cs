@@ -41,7 +41,7 @@ namespace CameraControllerApp
                 var response = client.ExecuteAsync(request);
 
                 var content = response.Result; // raw content as string
-                var result = content.Content;                             // 或自动反序列化结果
+                var result = content.get_Content();                             // 或自动反序列化结果
                 return result;
             }
 
@@ -124,7 +124,7 @@ namespace CameraControllerApp
 
                 var response = client.ExecuteAsync(request);
                 var content = response.Result; // raw content as string
-                var result = content.Content;
+                var result = content.get_Content();
                 Console.WriteLine("result" + result);
                 if(result == null)
                 {

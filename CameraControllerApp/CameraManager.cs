@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using System.IO.Ports;
 using System.Windows.Forms;
 using System.Runtime.Serialization;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;	// 用于构建JSON对象
+
 namespace CameraControllerApp
 {
     class CameraManager
