@@ -12,6 +12,7 @@ using System.IO.Ports;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq; // 用于构建JSON对象
 using System.Threading;
+using System.Diagnostics;
 
 namespace CameraControllerApp
 {
@@ -313,6 +314,16 @@ namespace CameraControllerApp
             Camera.serialPort = serialPort;
             // 设置模式为webHttp
             Camera.CamerType = "webHttp";      
+            // 将文字或者空间都变大一点
+            /**
+            foreach(Control c in this.Controls)
+            {
+                int size = (int) c.Font.Size;
+                c.Font = new Font("Microsoft Sans Serif", size * 1.2f);
+                // 空间的宽度都要增加
+                c.Width = c.Width + 20;
+                c.Height = c.Height + 10;
+            }**/
         }
 
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
@@ -337,7 +348,7 @@ namespace CameraControllerApp
                     serialPort.Read(buffer, 0, buffersize);    //从com1读取
                     string str = byteToHexStr(buffer);
                     // 这个str 就是我们需要的;
-                    if(str.Substring(0, 4) == "AA75")
+                    if(str.Length > 4 && str.Substring(0, 4) == "AA75")
                     {
                         // 这个时候获取当前的模式或者
                         var hexString
@@ -407,7 +418,7 @@ namespace CameraControllerApp
                                         //str += "02"; AV
                                         break;
                                 }
-
+                                
                                 break;
                         }
 
@@ -480,6 +491,7 @@ namespace CameraControllerApp
                         default:
                             break;
                     }
+                    OutLog(result, "初始化");
                 }
     // 是否为定时 如果是定时 那么就不能再设置定时了
     // isSetTime 
@@ -607,8 +619,22 @@ namespace CameraControllerApp
                     //这里还可以处理些比较耗时的事情。
                     Thread.Sleep(4000);//休眠时间
                     var url = "ftp://pi:raspberry@" + Camera.ConfigUrl;
+                    Console.WriteLine(url);
+                    // string url = "https://www.yesdotnet.com";
+                    Process p = new Process();
+                    p.StartInfo.FileName = "cmd.exe";
+                    p.StartInfo.UseShellExecute = false;    //不使用shell启动
+                    p.StartInfo.RedirectStandardInput = true;//喊cmd接受标准输入
+                    p.StartInfo.RedirectStandardOutput = false;//不想听cmd讲话所以不要他输出
+                    p.StartInfo.RedirectStandardError = true;//重定向标准错误输出
+                    p.StartInfo.CreateNoWindow = true;//不显示窗口
+                    p.Start();//向cmd窗口发送输入信息 后面的&exit告诉cmd运行好之后就退出
+                    p.StandardInput.WriteLine("explorer.exe " + url + "&exit");
+                    p.StandardInput.AutoFlush = true;
+                    p.WaitForExit();//等待程序执行完退出进程
+                    p.Close();
                     // 然后过个3秒钟 打开ftp
-                    System.Diagnostics.Process.Start(url);
+                    //System.Diagnostics.Process.Start(url);
                 });
                 thr.Start();
             }
@@ -620,17 +646,26 @@ namespace CameraControllerApp
         }
         private void btnDownEnd_Click(object sender, EventArgs e)
         {
-            // 开始开机
-            Camera.SendStatus("on");
-            // 下载结束
-            btnOn.Enabled = true;
-            btnOff.Enabled = true;
-
-            btnPlayPhoto.Enabled = true;
-            btnIntervalPlayPhoto.Enabled = true;
+            
 
             var result = Camera.SendStatus("downloadEnd");
             OutLog(result, "下载结束");
+            // 下载结束后才可以开机 延时5秒 因为4秒是持续继电器的时间
+
+            Thread thr = new Thread(() =>
+            {
+                //这里还可以处理些比较耗时的事情。
+                Thread.Sleep(5000);//休眠时间
+                                   // 开始开机
+                Camera.SendStatus("on");
+                // 下载结束
+                btnOn.Enabled = true;
+                btnOff.Enabled = true;
+
+                btnPlayPhoto.Enabled = true;
+                btnIntervalPlayPhoto.Enabled = true;
+            });
+            thr.Start();
         }
 
         private void MainForm_Closed(object sender, FormClosedEventArgs e)

@@ -251,6 +251,10 @@ namespace CameraControllerApp
                         break;
                     case "Interval": // 定时
                         var intHex = time.ToString("X");
+                        if(intHex.Length == 1)
+                        {
+                            intHex = "0" + intHex; 
+                        }
                         var str = "AA754402" + intHex + "01" + "20";
                         SerialPortSendData(str);
                         break;
