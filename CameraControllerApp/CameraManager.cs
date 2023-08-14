@@ -260,6 +260,13 @@ namespace CameraControllerApp
                         var str = "AA754402" + intHex + "01" + "20";
                         SerialPortSendData(str);
                         break;
+
+                    case "focusSub":
+                        SerialPortSendData("AA753E020000E3");
+                        break;
+                    case "focusAdd":
+                        SerialPortSendData("AA754E02000093");
+                        break;
                 }
                 return "success";
             }

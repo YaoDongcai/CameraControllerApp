@@ -13,6 +13,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq; // 用于构建JSON对象
 using System.Threading;
 using System.Diagnostics;
+using Timer = System.Windows.Forms.Timer;
 
 namespace CameraControllerApp
 {
@@ -22,9 +23,13 @@ namespace CameraControllerApp
         SerialPort serialPort = new SerialPort();
         private string GlobalStr = ""; // 是为了获取当前的所有的数据即可
         private int GlobalLength = 0;
+        // 增加一个定时器的功能
+        private Timer timer;
         public MainForm()
         {
             InitializeComponent();
+            // 开始定义这个timer 定时器即可
+            timer = new System.Windows.Forms.Timer();
         }
         private void initPortConfs()
         {
@@ -289,6 +294,13 @@ namespace CameraControllerApp
         {
             // 获取ini 文件
             var url = INIhelp.GetValue("URL");
+            var isROV = INIhelp.GetValue("ROV");
+            if(isROV == "1")
+            {
+                // 表示为ROV 那么就可以用变焦的功能 否则是不可以的
+                focusBtnAdd.Visible = true;
+                focusBtnSub.Visible = true;
+            }
             Camera.ConfigUrl = url;
             Camera.WebHttpUrl = "http://" + Camera.ConfigUrl + ":7001/respberry/";
 
@@ -679,6 +691,67 @@ namespace CameraControllerApp
             {
                 serialPort.Close();
             }
+        }
+        // 变焦+和- 是对于当前的图像设置为对应的属性即可
+
+        private void timerAddTick(object sender, EventArgs e)
+        {
+            var result = Camera.SendStatus("focusAdd");
+            OutLog(result, "变焦+");
+        }
+
+        private void timerSubTick(object sender, EventArgs e)
+        {
+            var result = Camera.SendStatus("focusSub");
+            OutLog(result, "变焦-");
+        }
+        // 变焦+
+        private void focusBtnAdd_Click(object sender, EventArgs e)
+        {
+            var result = Camera.SendStatus("focusAdd");
+            OutLog(result, "变焦+");
+
+        }
+        // 变焦-
+        private void focusBtnSub_Click(object sender, EventArgs e)
+        {
+            var result = Camera.SendStatus("focusSub");
+            OutLog(result, "变焦-");
+        }
+
+        private void focusBtnAdd_MouseDown(object sender, MouseEventArgs e)
+        {
+            // 网络发这个即可 "focusAdd"
+            timer.Tick += new EventHandler(timerAddTick);//事件处理
+            timer.Enabled = true;//设置启用定时器
+            timer.Interval = 200;//执行时间
+            timer.Start();//开启定时器
+            // 如果是http的请求才可以使用这个 否则端口就不让他使用即可
+        }
+
+        private void focusBtnAdd_MouseUp(object sender, MouseEventArgs e)
+        {
+            // 释放了
+            timer.Stop();//停止定时器
+            timer.Tick -= new EventHandler(timerAddTick);//取消事件
+            timer.Enabled = false;//设置禁用定时器
+        }
+
+        private void focusBtnSub_MouseDown(object sender, MouseEventArgs e)
+        {
+            // 网络发这个即可 "focusAdd"
+            timer.Tick += new EventHandler(timerSubTick);//事件处理
+            timer.Enabled = true;//设置启用定时器
+            timer.Interval = 200;//执行时间
+            timer.Start();//开启定时器
+        }
+
+        private void focusBtnSub_MouseUp(object sender, MouseEventArgs e)
+        {
+            // 释放了
+            timer.Stop();//停止定时器
+            timer.Tick -= new EventHandler(timerSubTick);//取消事件
+            timer.Enabled = false;//设置禁用定时器
         }
     }
 }
