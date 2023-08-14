@@ -363,6 +363,7 @@ namespace CameraControllerApp
                     if(GlobalStr.Length == GlobalLength * 2 + 10)
                     {
                         Console.WriteLine("开始初始化了" + GlobalStr);
+                        LogHelper.WriteInfoLog("port received:" + GlobalStr);
                         GlobalLength = 0;
                         // 开始处理这个数据即可
                         // 这里的数据需要开始处理
@@ -492,10 +493,13 @@ namespace CameraControllerApp
                             break;
                     }
                     OutLog(result, "初始化");
+                }else
+                {
+                    OutLog(result, "连接失败");
                 }
-    // 是否为定时 如果是定时 那么就不能再设置定时了
-    // isSetTime 
-}
+                // 是否为定时 如果是定时 那么就不能再设置定时了
+                // isSetTime 
+            }
            
         }
 

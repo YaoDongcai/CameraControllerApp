@@ -43,7 +43,7 @@ namespace CameraControllerApp
             // 获取我们输入的数据
             // String strSend = "AA75CE020000C3";
             // 应该是利用bytes 来发送数据
-             
+            LogHelper.WriteInfoLog("port send:" + strSend);
             Console.WriteLine(strSend);
             byte[] decBytes = new byte[strSend.Length/2];
             for (int i=0; i<strSend.Length; i+=2)
@@ -54,6 +54,7 @@ namespace CameraControllerApp
             
             Console.WriteLine("decBytes", decBytes);
             // 发送16进制的数据即可
+            
             serialPort.Write(decBytes, 0, decBytes.Length);
             /**
             char[] values = strSend.ToCharArray();
@@ -185,6 +186,7 @@ namespace CameraControllerApp
                         break;
                 }
                 var result = HttpRequest.SendPost(WebHttpUrl + subUrl, map);
+
                 return result;
                 // var jsonString = JsonConvert.SerializeObject(map, Formatting.Indented);// jss.Deserialize<Dictionary<string, object>>(map);
                 // Console.WriteLine("jsonString" +jsonString);

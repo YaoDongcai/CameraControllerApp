@@ -7,13 +7,13 @@ using System.IO;
 using System.Net;
 using RestSharp;
 using RestSharp.Authenticators;
-
 namespace CameraControllerApp
 {
     // 以下为封装的App Request 请求类
     class HttpRequest
     {
         private static readonly RestClient client = new RestClient();
+
         /// <summary>
         /// 向指定URL发送GET方法的请求
         /// </summary>
@@ -41,7 +41,8 @@ namespace CameraControllerApp
                 var response = client.ExecuteAsync(request);
 
                 var content = response.Result; // raw content as string
-                var result = content.get_Content();                             // 或自动反序列化结果
+                
+                var result = content.Content;                             // 或自动反序列化结果
                 return result;
             }
 
@@ -109,6 +110,7 @@ namespace CameraControllerApp
         public static string SendPost(string url, Dictionary<string, string> dic)
         {
             Console.WriteLine("url" + url);
+            LogHelper.WriteInfoLog("url:" + url);
             //post请求
             // client.Authenticator = new HttpBasicAuthenticator(username, password);
             try
@@ -124,16 +126,21 @@ namespace CameraControllerApp
 
                 var response = client.ExecuteAsync(request);
                 var content = response.Result; // raw content as string
-                var result = content.get_Content();
-                Console.WriteLine("result" + result);
-                if(result == null)
+                var result = content.Content;// content.get_Content();
+
+                Console.WriteLine("result" + result + "" + content.IsSuccessful);
+                LogHelper.WriteInfoLog("result:" + result + " 是否连接成功:" + content.IsSuccessful);
+                if (result == null || result == "")
                 {
                     return "Error";
                 }
+                
                 return result;// 或自动反序列化结果
             }catch(Exception error)
             {
-                return "Error:" + error.Message;
+                LogHelper.WriteLog("error:" + error.Message, error);
+                return "Error";
+                // return "Error:" + error.Message;
             }
             // return content type is sniffed but can be explicitly set via RestClient.AddHandler();
             
