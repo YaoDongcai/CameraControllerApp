@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO.Ports;
 using System.Windows.Forms;
 using System.Runtime.Serialization;
+using Common;
 
 namespace CameraControllerApp
 {
@@ -43,7 +44,7 @@ namespace CameraControllerApp
             // 获取我们输入的数据
             // String strSend = "AA75CE020000C3";
             // 应该是利用bytes 来发送数据
-            LogHelper.WriteInfoLog("port send:" + strSend);
+            NLogger.Default.Debug("port send:" + strSend);
             Console.WriteLine(strSend);
             byte[] decBytes = new byte[strSend.Length/2];
             for (int i=0; i<strSend.Length; i+=2)

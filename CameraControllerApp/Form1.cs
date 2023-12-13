@@ -14,6 +14,9 @@ using Newtonsoft.Json.Linq; // 用于构建JSON对象
 using System.Threading;
 using System.Diagnostics;
 using Timer = System.Windows.Forms.Timer;
+using Common;
+using System.Net.FtpClient;
+using System.Net;
 
 namespace CameraControllerApp
 {
@@ -50,7 +53,7 @@ namespace CameraControllerApp
                 // 设置默认串口位第一个
                 cbBox1.SelectedIndex = 0;
             }
-            
+
 
             string[] baudRate =
             {
@@ -98,7 +101,8 @@ namespace CameraControllerApp
 
             cbBoxCameraMode.Items.Clear();
 
-            string[] modes = {
+            string[] modes =
+            {
                 "P", "AV", "TV", "AUTO"
             };
             foreach(string s in modes)
@@ -109,12 +113,12 @@ namespace CameraControllerApp
             // listView 的设置
             this.LogListView.FullRowSelect = false;
             ColumnHeader HeaderLoger = new ColumnHeader();
-            
+
             HeaderLoger.Text = "操作日志";
             HeaderLoger.Width = LogListView.Width;
             HeaderLoger.TextAlign = HorizontalAlignment.Left;
             LogListView.Columns.AddRange(new ColumnHeader[] { HeaderLoger });
-            
+
             LogListView.View = View.Details;
         }
         private void btnOn_Click(object sender, EventArgs e)
@@ -166,7 +170,7 @@ namespace CameraControllerApp
                 cbBox1.SelectedIndex = 0;
             }
             //cbBox1.SelectedIndex = 0;
-            
+
         }
         // 打开或者关闭端口
         private void btnOpen_Click(object sender, EventArgs e)
@@ -200,38 +204,38 @@ namespace CameraControllerApp
 
                     switch (strStopBit)            //停止位
                     {
-                        case "1":
-                            serialPort.StopBits = StopBits.One;
-                            break;
-                        case "1.5":
-                            serialPort.StopBits = StopBits.OnePointFive;
-                            break;
-                        case "2":
-                            serialPort.StopBits = StopBits.Two;
-                            break;
-                        default:
-                            MessageBox.Show("Error：停止位参数不正确!", "Error");
-                            break;
+                    case "1":
+                        serialPort.StopBits = StopBits.One;
+                        break;
+                    case "1.5":
+                        serialPort.StopBits = StopBits.OnePointFive;
+                        break;
+                    case "2":
+                        serialPort.StopBits = StopBits.Two;
+                        break;
+                    default:
+                        MessageBox.Show("Error：停止位参数不正确!", "Error");
+                        break;
                     }
                     switch (strCheckBit)             //校验位
                     {
-                        case "None":
-                            serialPort.Parity = Parity.None;
-                            break;
-                        case "Odd":
-                            serialPort.Parity = Parity.Odd;
-                            break;
-                        case "Even":
-                            serialPort.Parity = Parity.Even;
-                            break;
-                        default:
-                            MessageBox.Show("Error：校验位参数不正确!", "Error");
-                            break;
+                    case "None":
+                        serialPort.Parity = Parity.None;
+                        break;
+                    case "Odd":
+                        serialPort.Parity = Parity.Odd;
+                        break;
+                    case "Even":
+                        serialPort.Parity = Parity.Even;
+                        break;
+                    default:
+                        MessageBox.Show("Error：校验位参数不正确!", "Error");
+                        break;
                     }
 
 
                     /**
-                     * 
+                     *
                     if (saveDataFile != null)
                     {
                         saveDataFS = File.Create(saveDataFile);
@@ -241,7 +245,8 @@ namespace CameraControllerApp
                     {
                         //打开串口
                         serialPort.Open();
-                    }catch(IOException msg)
+                    }
+                    catch(IOException msg)
                     {
                         MessageBox.Show("当前的端口不可用", "Error");
                         return;
@@ -274,12 +279,12 @@ namespace CameraControllerApp
                 cbBox3.Enabled = true;
                 cbBox4.Enabled = true;
                 cbBox5.Enabled = true;
-                
+
                 btnFresh.Enabled = true;
 
                 btnOpen.Text = "打开串口";
                 /**
-                 * 
+                 *
                 if (saveDataFS != null)
                 {
                     saveDataFS.Close(); // 关闭文件
@@ -288,7 +293,7 @@ namespace CameraControllerApp
 
             }
         }
-        
+
         // 串口load 的时候开始设置的函数
         private void MainForm_Load(object sender, EventArgs e)
         {
@@ -317,15 +322,15 @@ namespace CameraControllerApp
             serialPort.DataReceived += new SerialDataReceivedEventHandler(SerialPort_DataReceived);
             // serialPort.DataReceived += SerialPort_DataReceived;
 
-            
-            
+
+
             // serialPort.Encoding = Encoding.BigEndianUnicode;
             // serialPort.WriteTimeout = 1000;
             serialPort.Close();
             // 缓存这个变量到manager 里面去
             Camera.serialPort = serialPort;
             // 设置模式为webHttp
-            Camera.CamerType = "webHttp";      
+            Camera.CamerType = "webHttp";
             // 将文字或者空间都变大一点
             /**
             foreach(Control c in this.Controls)
@@ -365,7 +370,7 @@ namespace CameraControllerApp
                         // 这个时候获取当前的模式或者
                         var hexString
                             = str.Substring(6,2);
-                        GlobalLength = Int32.Parse(hexString, System.Globalization.NumberStyles.HexNumber); 
+                        GlobalLength = Int32.Parse(hexString, System.Globalization.NumberStyles.HexNumber);
                     }
 
                     if(GlobalStr.Length <GlobalLength * 2 + 10)
@@ -375,64 +380,65 @@ namespace CameraControllerApp
                     if(GlobalStr.Length == GlobalLength * 2 + 10)
                     {
                         Console.WriteLine("开始初始化了" + GlobalStr);
-                        LogHelper.WriteInfoLog("port received:" + GlobalStr);
+                        NLogger.Default.Debug("port received:" + GlobalStr);
                         GlobalLength = 0;
                         // 开始处理这个数据即可
                         // 这里的数据需要开始处理
                         switch(GlobalStr.Substring(4,2))
                         {
-                            case "2E":
-                                // 开始初始化里面的数据即可
-                                // 获取时间
-                                var isSetTimeStr = GlobalStr.Substring(8, 2);
-                                string LogStr = "";
-                                // 是否为定时
-                               if(isSetTimeStr == "01")
-                                {
-                                    // 非定时
-                                    LogStr += "手动拍照";
-                                }else
-                                {
-                                    // 表示为定时
-                                    LogStr += "定时拍照";
-                                }
-                                var unitStr = GlobalStr.Substring(10, 2);
-                                var defineTimeHexStr = GlobalStr.Substring(12, 2);
-                                var workType = GlobalStr.Substring(14, 2);
+                        case "2E":
+                            // 开始初始化里面的数据即可
+                            // 获取时间
+                            var isSetTimeStr = GlobalStr.Substring(8, 2);
+                            string LogStr = "";
+                            // 是否为定时
+                            if(isSetTimeStr == "01")
+                            {
+                                // 非定时
+                                LogStr += "手动拍照";
+                            }
+                            else
+                            {
+                                // 表示为定时
+                                LogStr += "定时拍照";
+                            }
+                            var unitStr = GlobalStr.Substring(10, 2);
+                            var defineTimeHexStr = GlobalStr.Substring(12, 2);
+                            var workType = GlobalStr.Substring(14, 2);
 
-                                // 开始设置数据即可
-                                // 需要将hexStr 的数据变成10进制的即可
-                                var defineTime = Int32.Parse(defineTimeHexStr, System.Globalization.NumberStyles.HexNumber);
-                                // 还需要设置单位即可  
-                                
-                                tbTime.Text = "" + defineTime;
-                                LogStr += "时间为:" + defineTime;
-                                // 还需要设置工作模式即可
-                                switch (workType)
-                                {
-                                    case "0A":
-                                        // P 模式
-                                        LogStr += ",模式为:" + "P模式";
-                                        cbBoxCameraMode.SelectedIndex = 0;
-                                        break;
-                                    case "01":
-                                        LogStr += ",模式为:" + "AUTO模式";
-                                        cbBoxCameraMode.SelectedIndex = 3;
-                                        //str += "AUTO";
-                                        break;
-                                    case "07":// TV
-                                        LogStr += ",模式为:" + "TV模式";
-                                        cbBoxCameraMode.SelectedIndex = 2;
-                                        //str += "07";
-                                        break;
-                                    case "02":
-                                        LogStr += ",模式为:" + "AV模式";
-                                        cbBoxCameraMode.SelectedIndex = 1;
-                                        //str += "02"; AV
-                                        break;
-                                }
-                                
+                            // 开始设置数据即可
+                            // 需要将hexStr 的数据变成10进制的即可
+                            var defineTime = Int32.Parse(defineTimeHexStr, System.Globalization.NumberStyles.HexNumber);
+                            // 还需要设置单位即可
+
+                            tbTime.Text = "" + defineTime;
+                            LogStr += "时间为:" + defineTime;
+                            // 还需要设置工作模式即可
+                            switch (workType)
+                            {
+                            case "0A":
+                                // P 模式
+                                LogStr += ",模式为:" + "P模式";
+                                cbBoxCameraMode.SelectedIndex = 0;
                                 break;
+                            case "01":
+                                LogStr += ",模式为:" + "AUTO模式";
+                                cbBoxCameraMode.SelectedIndex = 3;
+                                //str += "AUTO";
+                                break;
+                            case "07":// TV
+                                LogStr += ",模式为:" + "TV模式";
+                                cbBoxCameraMode.SelectedIndex = 2;
+                                //str += "07";
+                                break;
+                            case "02":
+                                LogStr += ",模式为:" + "AV模式";
+                                cbBoxCameraMode.SelectedIndex = 1;
+                                //str += "02"; AV
+                                break;
+                            }
+
+                            break;
                         }
 
                         // 处理完 需要干掉这个buffer;
@@ -464,7 +470,7 @@ namespace CameraControllerApp
         private void btnHttpInit_Click(object sender, EventArgs e)
         {
             // 需要判断是否为网络请求还是端口请求的初始化
-            if(serialPort.IsOpen) 
+            if(serialPort.IsOpen)
             {
                 // 如果是端口打开了 那么就是端口初始化
                 Camera.CamerType = "serialPort"; // 表示为端口
@@ -489,30 +495,31 @@ namespace CameraControllerApp
                     tbTime.Text = "" + defineTime;
                     switch (workType)
                     {
-                        case "P":
-                            cbBoxCameraMode.SelectedIndex = 0;
-                            break;
-                        case "AV":
-                            cbBoxCameraMode.SelectedIndex = 1;
-                            break;
-                        case "TV":
-                            cbBoxCameraMode.SelectedIndex = 2;
-                            break;
-                        case "AUTO":
-                            cbBoxCameraMode.SelectedIndex = 3;
-                            break;
-                        default:
-                            break;
+                    case "P":
+                        cbBoxCameraMode.SelectedIndex = 0;
+                        break;
+                    case "AV":
+                        cbBoxCameraMode.SelectedIndex = 1;
+                        break;
+                    case "TV":
+                        cbBoxCameraMode.SelectedIndex = 2;
+                        break;
+                    case "AUTO":
+                        cbBoxCameraMode.SelectedIndex = 3;
+                        break;
+                    default:
+                        break;
                     }
                     OutLog(result, "初始化");
-                }else
+                }
+                else
                 {
                     OutLog(result, "连接失败");
                 }
                 // 是否为定时 如果是定时 那么就不能再设置定时了
-                // isSetTime 
+                // isSetTime
             }
-           
+
         }
 
         private void btnOff_Click(object sender, EventArgs e)
@@ -548,7 +555,7 @@ namespace CameraControllerApp
             // 开始设置即可
             try
             {
-                 time = Convert.ToInt16(tData);// 设置为毫秒
+                time = Convert.ToInt16(tData);// 设置为毫秒
             }
             catch(FormatException exception)
             {
@@ -612,6 +619,137 @@ namespace CameraControllerApp
             LogListView.Items.Clear();
             OutLog("", "清除日志");
         }
+        //private void btnDownStart_Click(object sender, EventArgs e)
+        //{
+        //    // 开始下载
+        //    // 先关机
+        //    Camera.SendStatus("off");
+        //    // 关机之后 然后再下载开始
+        //    var result = Camera.SendStatus("downloadStart");
+
+        //    // 需要让开机 关机 定时拍照 拍照的按钮都要禁用
+        //    btnOn.Enabled = false;
+        //    btnOff.Enabled = false;
+
+        //    btnPlayPhoto.Enabled = false;
+        //    btnIntervalPlayPhoto.Enabled = false;
+        //    if (!result.Contains("Error"))
+        //    {
+        //        OutLog(result, "下载开始");
+        //        Thread thr = new Thread(() =>
+        //        {
+        //            //这里还可以处理些比较耗时的事情。
+        //            Thread.Sleep(4000);//休眠时间
+        //            var url = "ftp://pi:raspberry@" + Camera.ConfigUrl;
+        //            Console.WriteLine(url);
+        //            // string url = "https://www.yesdotnet.com";
+        //            Process p = new Process();
+        //            p.StartInfo.FileName = "cmd.exe";
+        //            p.StartInfo.UseShellExecute = false;    //不使用shell启动
+        //            p.StartInfo.RedirectStandardInput = true;//喊cmd接受标准输入
+        //            p.StartInfo.RedirectStandardOutput = false;//不想听cmd讲话所以不要他输出
+        //            p.StartInfo.RedirectStandardError = true;//重定向标准错误输出
+        //            p.StartInfo.CreateNoWindow = true;//不显示窗口
+        //            p.Start();//向cmd窗口发送输入信息 后面的&exit告诉cmd运行好之后就退出
+        //            p.StandardInput.WriteLine("explorer.exe " + url + "&exit");
+        //            p.StandardInput.AutoFlush = true;
+        //            p.WaitForExit();//等待程序执行完退出进程
+        //            p.Close();
+        //            // 然后过个3秒钟 打开ftp
+        //            //System.Diagnostics.Process.Start(url);
+        //        });
+        //        thr.Start();
+        //    }
+        //    else
+        //    {
+        //        // 包含了Error 那么就是不正常的了
+        //        // 输出日志即可
+        //    }
+        //}
+
+        /// <summary>
+        /// 连接FTP服务器函数
+        /// </summary>
+        /// <param name="strServer">服务器IP</param>
+        /// <param name="strUser">用户名</param>
+        /// <param name="strPassword">密码</param>
+        public bool FTPIsConnected(string strServer, string strUser, string strPassword)
+        {
+            using (FtpClient ftp = new FtpClient())
+            {
+                ftp.Host = strServer;
+                ftp.Credentials = new NetworkCredential(strUser, strPassword);
+                ftp.Connect();
+                return ftp.IsConnected;
+            }
+        }
+
+
+        /// <summary>
+        /// FTP下载文件
+        /// </summary>
+        /// <param name="strServer">服务器IP</param>
+        /// <param name="strUser">用户名</param>
+        /// <param name="strPassword">密码</param>
+        /// <param name="Serverpath">服务器路径，例子："/Serverpath/"</param>
+        /// <param name="localpath">本地保存路径</param>
+        /// <param name="filetype">所下载的文件类型,例子：".rte"</param>
+        public bool FTPIsdownload(string strServer, string strUser, string strPassword, string Serverpath, string localpath, string filetype)
+        {
+
+            FtpClient ftp = new FtpClient();
+            ftp.Host = strServer;
+            ftp.Credentials = new NetworkCredential(strUser, strPassword);
+            ftp.Connect();
+
+            string path = Serverpath;
+            string destinationDirectory = localpath;
+            List<string> documentname = new List<string>();
+            bool DownloadStatus = false;
+
+            if (Directory.Exists(destinationDirectory))
+            {
+                #region  从FTP服务器下载文件
+                foreach (var ftpListItem in ftp.GetListing(path, FtpListOption.Modify | FtpListOption.Size)
+                         .Where(ftpListItem => string.Equals(Path.GetExtension(ftpListItem.Name), filetype)))
+                {
+                    string destinationPath = string.Format(@"{0}\{1}", destinationDirectory, ftpListItem.Name);
+                    using (Stream ftpStream = ftp.OpenRead(ftpListItem.FullName))
+                        using (FileStream fileStream = File.Create(destinationPath, (int)ftpStream.Length))
+                        {
+                            var buffer = new byte[200 * 1024];
+                            int count;
+                            while ((count = ftpStream.Read(buffer, 0, buffer.Length)) > 0)
+                            {
+                                fileStream.Write(buffer, 0, count);
+                            }
+                        }
+                    documentname.Add(ftpListItem.Name);
+                }
+                #endregion
+
+                #region  验证本地是否有该文件
+                string[] files = Directory.GetFiles(localpath, "*" + filetype);
+                int filenumber = 0;
+                foreach (string strfilename in files)
+                {
+                    foreach (string strrecievefile in documentname)
+                    {
+                        if (strrecievefile == Path.GetFileName(strfilename))
+                        {
+                            filenumber++;
+                            break;
+                        }
+                    }
+                }
+                if (filenumber == documentname.Count)
+                {
+                    DownloadStatus = true;
+                }
+                #endregion
+            }
+            return DownloadStatus;
+        }
 
         private void btnDownStart_Click(object sender, EventArgs e)
         {
@@ -630,39 +768,33 @@ namespace CameraControllerApp
             if (!result.Contains("Error"))
             {
                 OutLog(result, "下载开始");
-                Thread thr = new Thread(() =>
+                if (!FTPIsConnected(Camera.ConfigUrl, "pi", "raspberry"))
                 {
-                    //这里还可以处理些比较耗时的事情。
-                    Thread.Sleep(4000);//休眠时间
-                    var url = "ftp://pi:raspberry@" + Camera.ConfigUrl;
-                    Console.WriteLine(url);
-                    // string url = "https://www.yesdotnet.com";
-                    Process p = new Process();
-                    p.StartInfo.FileName = "cmd.exe";
-                    p.StartInfo.UseShellExecute = false;    //不使用shell启动
-                    p.StartInfo.RedirectStandardInput = true;//喊cmd接受标准输入
-                    p.StartInfo.RedirectStandardOutput = false;//不想听cmd讲话所以不要他输出
-                    p.StartInfo.RedirectStandardError = true;//重定向标准错误输出
-                    p.StartInfo.CreateNoWindow = true;//不显示窗口
-                    p.Start();//向cmd窗口发送输入信息 后面的&exit告诉cmd运行好之后就退出
-                    p.StandardInput.WriteLine("explorer.exe " + url + "&exit");
-                    p.StandardInput.AutoFlush = true;
-                    p.WaitForExit();//等待程序执行完退出进程
-                    p.Close();
-                    // 然后过个3秒钟 打开ftp
-                    //System.Diagnostics.Process.Start(url);
+                    MessageBox.Show(string.Format("连接{0}Ftp服务器失败", Camera.ConfigUrl), "Error");
+                    return;
+                }
+                Task.Factory.StartNew(() =>
+                {
+                    try
+                    {
+                        FTPIsdownload(Camera.ConfigUrl, "pi", "raspberry", "media", "D:/", "jpg");
+                    }
+                    catch (Exception ex)
+                    {
+                        NLogger.Default.Error("FTP操作异常", ex);
+                    }
                 });
-                thr.Start();
             }
             else
             {
-                // 包含了Error 那么就是不正常的了
-                // 输出日志即可
+                NLogger.Default.Error("下载记录错误", result);
             }
         }
+
+
         private void btnDownEnd_Click(object sender, EventArgs e)
         {
-            
+
 
             var result = Camera.SendStatus("downloadEnd");
             OutLog(result, "下载结束");
@@ -672,7 +804,7 @@ namespace CameraControllerApp
             {
                 //这里还可以处理些比较耗时的事情。
                 Thread.Sleep(5000);//休眠时间
-                                   // 开始开机
+                // 开始开机
                 Camera.SendStatus("on");
                 // 下载结束
                 btnOn.Enabled = true;

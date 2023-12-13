@@ -5,15 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Net;
-using RestSharp;
-using RestSharp.Authenticators;
+using Common;
+using Newtonsoft.Json;
+
 namespace CameraControllerApp
 {
     // 以下为封装的App Request 请求类
     class HttpRequest
     {
-        private static readonly RestClient client = new RestClient();
-
         /// <summary>
         /// 向指定URL发送GET方法的请求
         /// </summary>
@@ -23,35 +22,33 @@ namespace CameraControllerApp
         public static string SendGet(string url)
         {
             try
-
             {
+                HttpHelper client = new HttpHelper();
+                HttpItem item = new HttpItem()
+                {
+                    URL = url,
+                    Encoding = System.Text.Encoding.UTF8,
+                    PostEncoding = System.Text.Encoding.UTF8,
+                    ContentType = "text/html",
+                    Method = "GET",
+                    Postdata = "",
+                    Timeout = 5000
+                };
+                HttpResult result = client.GetHtml(item);
+                if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                {
 
-                var client = new RestClient(url);
-
-                var request = new RestRequest();
-
-                request.Method = Method.Get;
-
-                request.Timeout = 5000;
-
-                request.AddHeader("content-type", "text/html; charset=utf-8");
-
-                request.AddHeader("content-encoding", "gzip");
-
-                var response = client.ExecuteAsync(request);
-
-                var content = response.Result; // raw content as string
-                
-                var result = content.Content;                             // 或自动反序列化结果
-                return result;
+                    return result.Html;
+                }
+                else
+                {
+                    NLogger.Default.Error("请求返还错误，code={0},desc={1}", result.StatusCode, result.StatusDescription);
+                    return "";
+                }
             }
-
             catch (Exception ex)
-
             {
-
                 return ex.ToString();
-
             }
         }
 
@@ -110,40 +107,43 @@ namespace CameraControllerApp
         public static string SendPost(string url, Dictionary<string, string> dic)
         {
             Console.WriteLine("url" + url);
-            LogHelper.WriteInfoLog("url:" + url);
+            NLogger.Default.Debug("url:" + url);
             //post请求
             // client.Authenticator = new HttpBasicAuthenticator(username, password);
             try
             {
-                var request = new RestRequest(url, Method.Post);
-                request.AddHeader("Content-Type", "application/json");
-                request.AddJsonBody(dic);
-                // adds to POST or URL querystring based on Method
-                // easily add HTTP Headers
-                // request.AddHeader("header", "value");
-                // add files to upload (works with compatible verbs)
-                // 执行请求
-
-                var response = client.ExecuteAsync(request);
-                var content = response.Result; // raw content as string
-                var result = content.Content;// content.get_Content();
-
-                Console.WriteLine("result" + result + "" + content.IsSuccessful);
-                LogHelper.WriteInfoLog("result:" + result + " 是否连接成功:" + content.IsSuccessful);
-                if (result == null || result == "")
+                HttpHelper client = new HttpHelper();
+                HttpItem item = new HttpItem()
                 {
-                    return "Error";
+                    URL = url,
+                    Encoding = System.Text.Encoding.UTF8,
+                    PostEncoding = System.Text.Encoding.UTF8,
+                    ContentType = "application/json",
+                    Method = "post",
+                    Postdata = JsonConvert.SerializeObject(dic)
+                };
+                HttpResult result = client.GetHtml(item);
+                NLogger.Default.Debug("服务器返回报文>>> {0}", result.Html);
+                if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    string response = result.Html;
+                    if (response == null || response == "")
+                    {
+                        return "Error";
+                    }
+                    return response;
                 }
-                
-                return result;// 或自动反序列化结果
-            }catch(Exception error)
-            {
-                LogHelper.WriteLog("error:" + error.Message, error);
+                else
+                {
+                    NLogger.Default.Error("请求返还错误，code={0},desc={1}", result.StatusCode, result.StatusDescription);
+                }
                 return "Error";
-                // return "Error:" + error.Message;
             }
-            // return content type is sniffed but can be explicitly set via RestClient.AddHandler();
-            
+            catch (Exception ex)
+            {
+                NLogger.Default.Error("请求异常", ex);
+            }
+            return "Error";
         }
 
         /// <summary>
