@@ -79,8 +79,9 @@ namespace CameraControllerApp
         }
         public string SendStatus(string status)
         {
+            NLogger.Default.Debug("send status:" + status);
             // 发送这个类型 需要知道是什么字段已经开头即可
-            if(this.CamerType == "webHttp") // webHttp 网络请求 or serialPort 端口发送
+            if (this.CamerType == "webHttp") // webHttp 网络请求 or serialPort 端口发送
             {
                 Dictionary<string, string> map = new Dictionary<string, string>();
                 string subUrl = "";
@@ -242,10 +243,10 @@ namespace CameraControllerApp
                     case "AUTO":
                         SerialPortSendData("AA755502010089");
                         break;
-                    case "TV":
+                    case "AV":
                         SerialPortSendData("AA75550202008A");
                         break;
-                    case "AV":
+                    case "TV":
                         SerialPortSendData("AA75550207008F");
                         break;
                     // AA756602000000

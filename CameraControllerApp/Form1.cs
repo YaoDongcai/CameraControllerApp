@@ -17,6 +17,7 @@ using Timer = System.Windows.Forms.Timer;
 using Common;
 using System.Net.FtpClient;
 using System.Net;
+using CameraControllerApp.Common;
 
 namespace CameraControllerApp
 {
@@ -619,53 +620,67 @@ namespace CameraControllerApp
             LogListView.Items.Clear();
             OutLog("", "清除日志");
         }
-        //private void btnDownStart_Click(object sender, EventArgs e)
-        //{
-        //    // 开始下载
-        //    // 先关机
-        //    Camera.SendStatus("off");
-        //    // 关机之后 然后再下载开始
-        //    var result = Camera.SendStatus("downloadStart");
+        private void btnDownStart_Click(object sender, EventArgs e)
+        {
+            // 开始下载
+            // 先关机
+            Camera.SendStatus("off");
+            // 关机之后 然后再下载开始
+            var result = Camera.SendStatus("downloadStart");
 
-        //    // 需要让开机 关机 定时拍照 拍照的按钮都要禁用
-        //    btnOn.Enabled = false;
-        //    btnOff.Enabled = false;
+            // 需要让开机 关机 定时拍照 拍照的按钮都要禁用
+            btnOn.Enabled = false;
+            btnOff.Enabled = false;
 
-        //    btnPlayPhoto.Enabled = false;
-        //    btnIntervalPlayPhoto.Enabled = false;
-        //    if (!result.Contains("Error"))
-        //    {
-        //        OutLog(result, "下载开始");
-        //        Thread thr = new Thread(() =>
-        //        {
-        //            //这里还可以处理些比较耗时的事情。
-        //            Thread.Sleep(4000);//休眠时间
-        //            var url = "ftp://pi:raspberry@" + Camera.ConfigUrl;
-        //            Console.WriteLine(url);
-        //            // string url = "https://www.yesdotnet.com";
-        //            Process p = new Process();
-        //            p.StartInfo.FileName = "cmd.exe";
-        //            p.StartInfo.UseShellExecute = false;    //不使用shell启动
-        //            p.StartInfo.RedirectStandardInput = true;//喊cmd接受标准输入
-        //            p.StartInfo.RedirectStandardOutput = false;//不想听cmd讲话所以不要他输出
-        //            p.StartInfo.RedirectStandardError = true;//重定向标准错误输出
-        //            p.StartInfo.CreateNoWindow = true;//不显示窗口
-        //            p.Start();//向cmd窗口发送输入信息 后面的&exit告诉cmd运行好之后就退出
-        //            p.StandardInput.WriteLine("explorer.exe " + url + "&exit");
-        //            p.StandardInput.AutoFlush = true;
-        //            p.WaitForExit();//等待程序执行完退出进程
-        //            p.Close();
-        //            // 然后过个3秒钟 打开ftp
-        //            //System.Diagnostics.Process.Start(url);
-        //        });
-        //        thr.Start();
-        //    }
-        //    else
-        //    {
-        //        // 包含了Error 那么就是不正常的了
-        //        // 输出日志即可
-        //    }
-        //}
+            btnPlayPhoto.Enabled = false;
+            btnIntervalPlayPhoto.Enabled = false;
+            if (!result.Contains("Error"))
+            {
+                OutLog(result, "下载开始");
+                Thread thr = new Thread(() =>
+                {
+                    //这里还可以处理些比较耗时的事情。
+                    Thread.Sleep(4000);//休眠时间
+                    var url = "ftp://pi:raspberry@" + Camera.ConfigUrl;
+                    /**
+                    * 
+                   Process p = new Process();
+                   p.StartInfo.FileName = "cmd.exe";
+                   p.StartInfo.UseShellExecute = false;    //不使用shell启动
+                   p.StartInfo.RedirectStandardInput = true;//喊cmd接受标准输入
+                   p.StartInfo.RedirectStandardOutput = false;//不想听cmd讲话所以不要他输出
+                   p.StartInfo.RedirectStandardError = true;//重定向标准错误输出
+                   p.StartInfo.CreateNoWindow = true;//不显示窗口
+                   p.Start();//向cmd窗口发送输入信息 后面的&exit告诉cmd运行好之后就退出
+                   p.StandardInput.WriteLine("explorer.exe " + url + "&exit");
+                   p.StandardInput.AutoFlush = true;
+                   p.WaitForExit();//等待程序执行完退出进程
+                   p.Close();
+                   **/
+                   url = "http://192.168.0.10:8080";
+                    bool openRes = OpenBrowserHelper.OpenChromeBrowserUrl(url);
+
+                    if (!openRes)
+                        openRes = OpenBrowserHelper.OpenDefaultBrowserUrl(url);
+
+                    if (!openRes)
+                    {
+                        // 打开下载链接，从官网下载 谷歌
+                        if (MessageBox.Show("系统未安装谷歌（Chrome）浏览器，是否下载安装？", null, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question) == DialogResult.Yes)
+                        {
+                            OpenBrowserHelper.OpenIe("https://www.google.cn/chrome/");
+                        }
+                    }
+                   
+                });
+                thr.Start();
+            }
+            else
+            {
+                // 包含了Error 那么就是不正常的了
+                // 输出日志即可
+            }
+        }
 
         /// <summary>
         /// 连接FTP服务器函数
@@ -751,45 +766,45 @@ namespace CameraControllerApp
             return DownloadStatus;
         }
 
-        private void btnDownStart_Click(object sender, EventArgs e)
-        {
-            // 开始下载
-            // 先关机
-            Camera.SendStatus("off");
-            // 关机之后 然后再下载开始
-            var result = Camera.SendStatus("downloadStart");
+        //private void btnDownStart_Click(object sender, EventArgs e)
+        //{
+        //    // 开始下载
+        //    // 先关机
+        //    Camera.SendStatus("off");
+        //    // 关机之后 然后再下载开始
+        //    var result = Camera.SendStatus("downloadStart");
 
-            // 需要让开机 关机 定时拍照 拍照的按钮都要禁用
-            btnOn.Enabled = false;
-            btnOff.Enabled = false;
+        //    // 需要让开机 关机 定时拍照 拍照的按钮都要禁用
+        //    btnOn.Enabled = false;
+        //    btnOff.Enabled = false;
 
-            btnPlayPhoto.Enabled = false;
-            btnIntervalPlayPhoto.Enabled = false;
-            if (!result.Contains("Error"))
-            {
-                OutLog(result, "下载开始");
-                if (!FTPIsConnected(Camera.ConfigUrl, "pi", "raspberry"))
-                {
-                    MessageBox.Show(string.Format("连接{0}Ftp服务器失败", Camera.ConfigUrl), "Error");
-                    return;
-                }
-                Task.Factory.StartNew(() =>
-                {
-                    try
-                    {
-                        FTPIsdownload(Camera.ConfigUrl, "pi", "raspberry", "media", "D:/", "jpg");
-                    }
-                    catch (Exception ex)
-                    {
-                        NLogger.Default.Error("FTP操作异常", ex);
-                    }
-                });
-            }
-            else
-            {
-                NLogger.Default.Error("下载记录错误", result);
-            }
-        }
+        //    btnPlayPhoto.Enabled = false;
+        //    btnIntervalPlayPhoto.Enabled = false;
+        //    if (!result.Contains("Error"))
+        //    {
+        //        OutLog(result, "下载开始");
+        //        if (!FTPIsConnected(Camera.ConfigUrl, "pi", "raspberry"))
+        //        {
+        //            MessageBox.Show(string.Format("连接{0}Ftp服务器失败", Camera.ConfigUrl), "Error");
+        //            return;
+        //        }
+        //        Task.Factory.StartNew(() =>
+        //        {
+        //            try
+        //            {
+        //                FTPIsdownload(Camera.ConfigUrl, "pi", "raspberry", "media", "D:/", "jpg");
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                NLogger.Default.Error("FTP操作异常", ex);
+        //            }
+        //        });
+        //    }
+        //    else
+        //    {
+        //        NLogger.Default.Error("下载记录错误", result);
+        //    }
+        //}
 
 
         private void btnDownEnd_Click(object sender, EventArgs e)
