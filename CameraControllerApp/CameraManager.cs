@@ -172,7 +172,18 @@ namespace CameraControllerApp
                         subUrl = "GPIOControllerIntertime";
                         map.Add("send", "photo");
                         map.Add("defineTime", this.time + "");
-                        map.Add("unit", "s");
+                        if(this.uatUnit == "01")
+                        {
+                            map.Add("unit", "s");
+                        }
+                        if (this.uatUnit == "02")
+                        {
+                            map.Add("unit", "m");
+                        }
+                        if (this.uatUnit == "03")
+                        {
+                            map.Add("unit", "h");
+                        }
                         map.Add("timeOut", (this.time * 1000) + "");
                         // map.Add("");
                         break;

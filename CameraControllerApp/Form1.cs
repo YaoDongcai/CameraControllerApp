@@ -98,6 +98,8 @@ namespace CameraControllerApp
         {
             cbBoxTimeMode.Items.Clear();
             cbBoxTimeMode.Items.Add("秒"); // 默认就是秒即可
+            cbBoxTimeMode.Items.Add("分");
+            cbBoxTimeMode.Items.Add("时");
             cbBoxTimeMode.SelectedIndex = 0; // 默认就是选择即可
 
             cbBoxCameraMode.Items.Clear();
@@ -556,14 +558,25 @@ namespace CameraControllerApp
             // 开始设置即可
             try
             {
-                time = Convert.ToInt16(tData);// 设置为毫秒
+                time = Convert.ToInt16(tData);// 设置为秒
             }
             catch(FormatException exception)
             {
                 MessageBox.Show(exception.Message + "");
             }
             // 获取到这个时间后 需要自己组装str;
-            Camera.uatUnit = "01";
+            if(cbBoxTimeMode.SelectedIndex == 0)
+            {
+                Camera.uatUnit = "01";
+            }
+            if (cbBoxTimeMode.SelectedIndex == 1)
+            {
+                Camera.uatUnit = "02";
+            }
+            if (cbBoxTimeMode.SelectedIndex == 2)
+            {
+                Camera.uatUnit = "03";
+            }
             Camera.time = time;
             var result = Camera.SendStatus("Interval");
 
@@ -899,6 +912,11 @@ namespace CameraControllerApp
             timer.Stop();//停止定时器
             timer.Tick -= new EventHandler(timerSubTick);//取消事件
             timer.Enabled = false;//设置禁用定时器
+        }
+
+        private void cbBoxTimeMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
