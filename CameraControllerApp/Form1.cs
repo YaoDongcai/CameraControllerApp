@@ -496,6 +496,20 @@ namespace CameraControllerApp
                     var defineTime = ResJson.data.defineTime;
                     // 开始设置界面上的数据类型为这个即可
                     tbTime.Text = "" + defineTime;
+                    // 初始化相机的定时设置
+                    if(unit == "s")
+                    {
+                        // 就是秒
+                        cbBoxTimeMode.SelectedIndex = 0;
+                    }else if(unit == "m")
+                    {
+                        // 分钟
+                        cbBoxTimeMode.SelectedIndex = 1;
+                    }
+                    else if(unit == "h")
+                    {
+                        cbBoxTimeMode.SelectedIndex = 2;
+                    }
                     switch (workType)
                     {
                     case "P":
@@ -513,7 +527,18 @@ namespace CameraControllerApp
                     default:
                         break;
                     }
-                    OutLog(result, "初始化");
+
+                    var setTimeMessagge = "工作模式为:" + workType;
+                    if (isSetTime != 0)
+                    {
+                        // 表示为自动定时
+                        setTimeMessagge += ",自动拍照模式,定时时间间隔为:" + defineTime + "(" + unit + ")";
+                    }
+                    else
+                    {
+                        setTimeMessagge += ",手动拍照模式";
+                    }
+                    OutLog(result, setTimeMessagge);
                 }
                 else
                 {

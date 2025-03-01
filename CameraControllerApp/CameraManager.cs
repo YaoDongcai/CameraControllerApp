@@ -270,7 +270,7 @@ namespace CameraControllerApp
                         {
                             intHex = "0" + intHex; 
                         }
-                        var str = "AA754402" + intHex + "01" + "20";
+                        var str = "AA754402" + intHex + this.uatUnit + "20";
                         SerialPortSendData(str);
                         break;
 
